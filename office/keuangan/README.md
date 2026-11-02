@@ -118,6 +118,13 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
   tanggal yang sama (pengeluaran per kategori, piutang, dan/atau bayar utang) yang **tidak muncul satu-satu di mutasi**.
   Cara cek: jumlah baris rincian di tanggal itu = nominal debit. Contoh pola: bayar SPayLater = beberapa makan + kas
   piutang + cicilan.
+- **Kartu kredit BCA** (dua kartu: Mastercard dan UnionPay, satu tagihan gabungan). Tagihan terbit sekitar tanggal 12,
+  dibayar dari BCA (dana sering dari OCBC). Belanja dari tagihan dirinci di tanggal pembayaran: belanja = Pengeluaran
+  per kategori (rekening BCA), talangan orang = Piutang, cicilan/pembelian besar = Utang "BCA Credit Card". Biaya
+  overlimit dan bea meterai ikut dihitung. Cek: jumlah rincian = nominal pembayaran.
+- **GoPay**: di riwayat GoPay, transaksi dengan metode pembayaran kartu (bukan "GoPay Saldo") dibayar pakai kartu kredit,
+  jadi masuk rincian tagihan kartu kredit, bukan rekening GoPay. Pasangan pembelian + refund di hari yang sama (mis.
+  YouTube Music) selama ini tidak dicatat. Transfer ke merchant perorangan lewat GoPay = beli makanan (lihat rincian Sena).
 - `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
   rekening tujuan BCA. Bukan pendapatan.
 

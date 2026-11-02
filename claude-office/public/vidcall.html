@@ -71,8 +71,8 @@ aside h2 { font-size: 16px; margin: 0; padding: 12px 14px; border-bottom: 2px so
 aside { width: 340px; }
 .log { flex: 1; overflow: auto; padding: 10px 12px; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .log li { font-size: 14px; line-height: 1.35; max-width: 88%; padding: 7px 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.log li.val { align-self: flex-end; background: #3a3550; box-shadow: 0 0 0 2px #8b80ff; }
-.log li.sena, .log li.agent { align-self: flex-start; background: #fffdf6; color: #1a1420; box-shadow: 0 0 0 2px #1a1420; }
+.log li.bos { align-self: flex-end; background: #3a3550; box-shadow: 0 0 0 2px #8b80ff; }
+.log li.manager, .log li.agent { align-self: flex-start; background: #fffdf6; color: #1a1420; box-shadow: 0 0 0 2px #1a1420; }
 .log li.sys { align-self: center; max-width: 100%; padding: 0; color: var(--muted); font-size: 12px; text-align: center; }
 .log li .who { display: block; font-size: 11px; font-weight: 700; opacity: .7; margin-bottom: 2px; }
 .log li time { font-size: 11px; opacity: .6; margin-left: 6px; }
@@ -116,18 +116,19 @@ header h1 { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 </main>
 <script>
 // ---------- the team ----------
-// `id` matches the agent's subagent type (or 'sena' for the main Claude session, 'bos' for you).
+// `id` matches the agent's subagent type (or 'manager' for the main Claude session, 'bos' for you).
 const TEAM = [
-  { id: 'bos', name: 'Val', role: 'Bos', look: 'val', bg: '#14204a' },
-  { id: 'sena', name: 'Sena', role: 'Manager', look: 'sena', bg: '#29282f' },
-  { id: 'riset-tren', name: 'Salomo', role: 'Riset', look: 'ene', bg: '#0f2a44' },
-  { id: 'scriptwriter', name: 'Daud', role: 'Script', look: 'light', bg: '#1c1a20' },
-  { id: 'planner', name: 'Saul', role: 'Planner', look: 'lelouch', bg: '#2a1a3d' },
-  { id: 'brand-manager', name: 'Yerobeam', role: 'Email & Brand', look: 'miku', bg: '#123a3a' },
-  { id: 'video-editor', name: 'Yehu', role: 'Video', look: 'lucy', bg: '#140f24' },
-  { id: 'analis-data', name: 'Omri', role: 'Analis Data', look: 'ai', bg: '#33193a' },
-  { id: 'keuangan', name: 'Menahem', role: 'Keuangan', look: 'fern', bg: '#1f1a33' },
+  { id: 'bos', name: 'Sena', role: 'Bos', look: 'bos', bg: '#29282f' },
+  { id: 'manager', name: 'Hizkia', role: 'Manager', look: 'hizkia', bg: '#14204a' },
+  { id: 'riset-tren', name: 'Salomo', role: 'Riset', look: 'salomo', bg: '#0f2a44' },
+  { id: 'scriptwriter', name: 'Daud', role: 'Script', look: 'daud', bg: '#1c1a20' },
+  { id: 'planner', name: 'Saul', role: 'Planner', look: 'saul', bg: '#2a1a3d' },
+  { id: 'brand-manager', name: 'Yerobeam', role: 'Email & Brand', look: 'yerobeam', bg: '#123a3a' },
+  { id: 'video-editor', name: 'Yehu', role: 'Video', look: 'yehu', bg: '#140f24' },
+  { id: 'analis-data', name: 'Omri', role: 'Analis Data', look: 'omri', bg: '#33193a' },
+  { id: 'keuangan', name: 'Menahem', role: 'Keuangan', look: 'menahem', bg: '#1f1a33' },
 ];
+const BOS = TEAM[0].name, MGR = TEAM[1].name;
 const K = '#1a1420', WH = '#ffffff', BLUSH = '#ff8fa3';
 
 // ---------- pixel-art busts: 40x30 cells on a 4:3 tile, drawn from rectangles so they can blink and talk ----------
@@ -166,64 +167,9 @@ function drawAvatar(ctx, a, t, st) {
 }
 
 const LOOKS = {
-  // Yehu (look 'lucy'): silver-white bob with pink and cyan tips, blunt bangs, grey-blue eyes with red liner,
-  // black high-collar jacket, a neural port on the neck, a neon city and a small moon behind her
-  lucy: {
-    skin: '#f7e4dd', shirt: '#1b1b24', shirtHi: '#2c2c3a',
-    room: (F, t) => {
-      for (const [x, w, h] of [[0, 4, 12], [4, 3, 17], [7, 4, 9], [30, 3, 15], [33, 4, 11], [37, 3, 18]]) {
-        F(x, 30 - h, w, h, '#1f1838');
-        for (let y = 31 - h; y < 29; y += 2) F(x + 1, y, 1, 0.5, (x + y) % 3 ? '#ff4fd855' : '#4ff0ff66');
-      }
-      for (let dy = -2; dy <= 2; dy++) { const w = Math.sqrt(6.5 - dy * dy); F(33 - w, 5 + dy, 2 * w, 1, '#f2e6c9'); }
-      F(0, 28.5, 40, 0.3, `rgba(255,79,216,${0.3 + 0.2 * Math.sin(t * 3)})`);
-    },
-    back: ({ R }) => { R(11, 7, 18, 15, K); R(12, 8, 16, 14, '#e9eef6'); R(12, 18, 16, 4, '#dfe6f2'); },
-    clothes: ({ R }) => {
-      R(16, 22, 8, 3, K); R(17, 22, 6, 3, '#e9e9f2'); // high white collar
-      R(18, 22.5, 1, 1, '#4ff0ff'); // neural port
-      R(11, 26, 1, 5, '#4ff0ff'); R(28, 26, 1, 5, '#ff4fd8'); R(15, 25, 1, 6, '#2c2c3a'); R(24, 25, 1, 6, '#2c2c3a');
-    },
-    eyes: ({ R, blink }) => {
-      if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); }
-      else for (const ex of [15, 22]) { R(ex, 13, 3, 4, K); R(ex, 14, 3, 3, '#7f8fb8'); R(ex, 14, 1, 1, WH); R(ex + 2, 16, 1, 1, '#ffffff88'); }
-      R(14.5, 16.5, 0.5, 1, '#e0284f'); R(25, 16.5, 0.5, 1, '#e0284f'); // red liner wings
-    },
-    front: ({ R }) => {
-      const H = '#e9eef6';
-      R(13, 5, 14, 5, K); R(14, 6, 12, 5, H); R(15, 6, 5, 1, WH);
-      R(14, 11, 2, 1, H); R(17, 11, 3, 1, H); R(21, 11, 2, 1, H); R(24, 11, 2, 1, H); // blunt bangs
-      R(12.5, 9, 1.5, 13, H); R(26, 9, 1.5, 13, H); // side locks to the jaw
-      R(12, 18, 2, 4, '#ff7ad9'); R(26, 18, 2, 4, '#7ff0ff'); R(12.5, 17, 1.5, 1, '#f7b8e8'); R(26, 17, 1.5, 1, '#b8f7ff'); // pastel tips
-    },
-  },
-  // Val (you): messy black hair with a white streak, orange eyes, blue rectangular glasses,
-  // white shirt and black tie under a red-pink hood, in front of a full moon
-  val: {
-    skin: '#f3ddd2', eye: '#e8762a', shirt: '#d24a68', shirtHi: '#e8708a',
-    room: (F) => {
-      for (const [x, y] of [[3, 3], [7, 9], [5, 20], [34, 4], [37, 12], [32, 22], [11, 2], [29, 1]]) F(x, y, 0.5, 0.5, '#ffffffaa');
-      for (let dy = -10; dy <= 10; dy++) { const w = Math.sqrt(100 - dy * dy); F(20 - w, 13 + dy, 2 * w, 1, '#c9ccd8'); } // the moon
-      F(12, 8, 2, 2, '#b3b7c6'); F(26, 6, 3, 2, '#b3b7c6'); F(27, 17, 2, 2, '#b3b7c6'); F(11, 17, 2, 1, '#b3b7c6');
-    },
-    back: ({ R }) => { R(12, 7, 16, 15, K); R(13, 8, 14, 14, '#1b1a24'); },
-    clothes: ({ R }) => {
-      R(16, 24, 3, 2, WH); R(21, 24, 3, 2, WH); R(19, 25, 2, 6, '#15131c'); R(19, 24, 2, 1, '#2a2833'); // collar + tie
-      R(9, 23, 7, 2, '#a8344f'); R(24, 23, 7, 2, '#a8344f'); R(10, 23, 4, 1, '#e8708a'); // the hood rolled round the shoulders
-    },
-    front: ({ R }) => {
-      const H = '#1b1a24', streak = '#efe3ea';
-      R(13, 5, 14, 5, K); R(14, 6, 12, 4, H); R(15, 4, 2, 1, K); R(21, 4, 3, 1, K); R(16, 6, 4, 1, '#3a3a52');
-      R(14, 10, 3, 3, H); R(17, 10, 2, 4, H); R(20, 10, 3, 2, H); R(23, 10, 3, 3, H); // messy bangs
-      R(13, 9, 1, 11, H); R(26, 9, 1, 11, H); R(12, 12, 1, 7, H); R(27, 12, 1, 7, H); // sides past the jaw
-      R(24, 7, 2, 5, streak); R(26, 10, 1, 7, streak); R(25, 12, 1, 1, streak); // the white streak
-      for (const gx of [14.5, 21.5]) { R(gx, 12.5, 4, 0.5, '#3d6fe0'); R(gx, 17, 4, 0.5, '#3d6fe0'); R(gx, 12.5, 0.5, 5, '#3d6fe0'); R(gx + 3.5, 12.5, 0.5, 5, '#3d6fe0'); }
-      R(18.5, 14, 3, 0.5, '#3d6fe0');
-    },
-  },
-  // Sena: long black hair parted in the middle, round glasses, eyes closed in a soft smile,
+  // Sena (the boss, you): long black hair parted in the middle, round glasses, eyes closed in a soft smile,
   // white frilled blouse with a black ribbon, little orange lantern earrings and pendant
-  sena: {
+  bos: {
     skin: '#fbe9e4', shirt: '#f4f1f6', shirtHi: '#ffffff',
     room: (F) => { F(1, 1, 38, 28, '#ffffff06'); F(3, 2, 34, 0.5, '#ffffff22'); F(3, 2, 0.5, 26, '#ffffff22'); F(36.5, 2, 0.5, 26, '#ffffff22'); F(19, 2.5, 2, 1, '#ffe08a'); },
     back: ({ R }) => { R(10, 6, 20, 25, K); R(11, 7, 18, 24, '#1c1b22'); R(12, 12, 1, 18, '#2c2f45'); R(27, 12, 1, 18, '#2c2f45'); R(14, 22, 1, 9, '#2c2f45'); R(25, 22, 1, 9, '#2c2f45'); },
@@ -246,7 +192,6 @@ const LOOKS = {
       R(14, 11, 0.5, 8, '#1c1b22'); R(25.5, 11, 0.5, 8, '#1c1b22'); // thin strands framing the face
       R(12, 9, 2, 14, '#1c1b22'); R(26, 9, 2, 14, '#1c1b22'); R(15, 7, 3, 1, '#3a3f5c'); R(22, 7, 3, 1, '#3a3f5c');
       R(11, 4, 2, 1, '#1c1b22'); R(9, 5, 3, 1, '#1c1b22'); R(28, 5, 3, 1, '#1c1b22'); R(30, 6, 2, 1, '#1c1b22'); // stray strands
-      // round glasses
       // round glasses, half-cell thin rims
       for (const gx of [14.5, 21]) { R(gx + 1, 12.5, 2.5, 0.5, K); R(gx + 1, 17, 2.5, 0.5, K); R(gx + 0.5, 13, 0.5, 4, K); R(gx + 3.5, 13, 0.5, 4, K); R(gx + 1, 13, 0.5, 0.5, '#ffffff88'); }
       R(19, 14, 2, 0.5, K);
@@ -254,84 +199,183 @@ const LOOKS = {
       R(13, 19, 1, 1, '#d8a63a'); R(13, 20, 1, 2, '#e05a2b'); R(26, 19, 1, 1, '#d8a63a'); R(26, 20, 1, 2, '#e05a2b');
     },
   },
-  // Salomo (look 'ene'): the cyber girl in the screen, blue twin tails and a blue track jacket
-  ene: {
-    skin: '#e6f3ff', eye: '#18b8e6', shirt: '#1f6fd1', shirtHi: '#3d8ff0',
-    room: (F, t) => { for (let i = 0; i < 40; i += 4) F(i, 0, 0.25, 30, '#22d3ee18'); for (let j = 0; j < 30; j += 4) F(0, j, 40, 0.25, '#22d3ee18'); F(2, (t * 6) % 30, 36, 0.4, '#22d3ee33'); },
-    back: ({ R, t }) => { const sw = Math.round(Math.sin(t * 2)); R(6 + sw, 11, 6, 16, K); R(7 + sw, 12, 4, 14, '#2fa8ff'); R(28 - sw, 11, 6, 16, K); R(29 - sw, 12, 4, 14, '#2fa8ff'); R(7 + sw, 12, 1, 10, '#8fdcff'); R(29 - sw, 12, 1, 10, '#8fdcff'); },
-    clothes: ({ R }) => { R(19, 25, 2, 6, WH); R(12, 26, 1, 5, WH); R(27, 26, 1, 5, WH); R(16, 24, 8, 1, '#1a4fa0'); },
-    mouth: ({ R, open, st }) => { if (open) { R(18, 19, 4, 2, K); R(19, 20, 2, 1, '#ff6b8a'); } else { R(18, 19, 1, 1, K); R(19, 20, 2, 1, K); R(21, 19, 1, 1, K); } },
-    front: ({ R }) => { R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#2fa8ff'); R(14, 10, 3, 3, '#2fa8ff'); R(18, 10, 2, 2, '#2fa8ff'); R(21, 10, 2, 3, '#2fa8ff'); R(24, 10, 2, 3, '#2fa8ff'); R(16, 6, 5, 1, '#8fdcff'); R(11, 10, 3, 3, '#ffd23f'); R(26, 10, 3, 3, '#ffd23f'); },
-  },
-  // Daud (look 'light'): neat chestnut hair, sharp amber eyes, a knowing smirk; navy blazer, maroon tie (and an apple nearby)
-  light: {
-    skin: '#f3d2b3', shirt: '#1f2a44', shirtHi: '#34466e',
-    room: (F) => { F(32, 21, 3, 3, '#c0262d'); F(33, 20, 1, 1, '#4a3020'); F(34, 19.5, 1.5, 0.8, '#3a8a3a'); F(32.5, 21.5, 0.8, 0.8, '#ff8a8a'); F(2, 3, 9, 8, '#ffffff08'); },
-    clothes: ({ R }) => { R(17, 24, 6, 4, WH); R(19, 25, 2, 6, '#7a1e2a'); R(19, 25, 2, 1, '#9a2a38'); },
-    eyes: ({ R, blink }) => { if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); return; } for (const ex of [15, 22]) { R(ex, 14, 3, 1, K); R(ex, 15, 3, 2, '#b5651d'); R(ex + 1, 15, 1, 1, WH); } },
-    mouth: ({ R, open }) => { if (open) { R(19, 19, 3, 2, K); R(20, 20, 1, 1, '#7a2e3a'); } else { R(19, 20, 2, 1, K); R(21, 19, 1, 1, K); } },
-    front: ({ R }) => { R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#a0643a'); R(14, 10, 3, 4, '#a0643a'); R(17, 10, 3, 2, '#a0643a'); R(21, 10, 2, 3, '#a0643a'); R(23, 10, 3, 4, '#a0643a'); R(13, 9, 1, 8, '#a0643a'); R(26, 9, 1, 8, '#a0643a'); R(16, 6, 6, 1, '#c98a52'); R(15, 12, 3, 1, '#7a4a28'); R(22, 12, 3, 1, '#7a4a28'); },
-  },
-  // Saul (look 'lelouch'): black hair, violet eyes (the left one glows red while he works), black uniform with gold trim
-  lelouch: {
-    skin: '#f6dcc6', shirt: '#17121f', shirtHi: '#2a2238',
-    room: (F) => { F(2, 3, 9, 8, '#ffffff08'); F(32, 4, 2, 2, '#c43b5a55'); F(31, 5, 4, 0.5, '#c43b5a55'); F(32.75, 3, 0.5, 4, '#c43b5a55'); },
-    clothes: ({ R }) => { R(16, 23, 8, 2, '#17121f'); R(16, 23, 8, 1, '#d4a43a'); R(19, 25, 2, 6, '#d4a43a'); R(12, 26, 4, 1, '#d4a43a'); R(24, 26, 4, 1, '#d4a43a'); },
-    eyes: ({ R, blink, st, t }) => {
-      if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); return; }
-      const geass = st.talking && Math.sin(t * 2) > -0.3;
-      R(15, 13, 3, 4, K); R(15, 14, 3, 3, '#8a4fd8'); R(15, 14, 1, 1, WH);
-      R(22, 13, 3, 4, K); R(22, 14, 3, 3, geass ? '#e0284f' : '#8a4fd8'); R(22, 14, 1, 1, WH); if (geass) R(23, 15, 1, 1, '#ffb3c4');
+  // Hizkia (manager): neat dark-brown hair with a side part, calm straight brows over warm brown eyes,
+  // white shirt under a navy vest with a little gold crown pin, a clipboard in hand, a checklist whiteboard behind him
+  hizkia: {
+    skin: '#f0d3bd', eye: '#7a4a2a', shirt: '#25335c', shirtHi: '#34467a',
+    room: (F) => {
+      F(2, 3, 10, 12, '#5e6478'); F(2.5, 3.5, 9, 11, '#ece8df'); // whiteboard
+      for (const [y, done] of [[5, 1], [8, 1], [11, 0]]) { F(3.5, y, 1.5, 1.5, done ? '#3fa66b' : '#c9c2b4'); F(6, y + 0.5, 4.5, 0.5, '#6b7286'); }
+      F(30, 3, 8, 11, '#2f3a5e'); F(30.5, 3.5, 3.25, 10, '#7fb0e0'); F(34.25, 3.5, 3.25, 10, '#7fb0e0'); F(31, 4, 1, 3, '#ffffff55'); // window
+      F(29, 21, 11, 1, '#5a3e2b'); F(30, 17, 2, 4, '#b0413e'); F(32, 16, 1.5, 5, '#3d6fe0'); F(33.5, 18, 2, 3, '#d8a63a'); F(36, 17, 1.5, 4, '#3fa66b'); // shelf of books
     },
-    mouth: ({ R, open }) => { if (open) { R(19, 19, 3, 2, K); R(20, 20, 1, 1, '#7a2e3a'); } else { R(19, 19, 3, 1, K); R(22, 18, 1, 1, K); } },
-    front: ({ R }) => { R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#15121c'); R(14, 10, 2, 5, '#15121c'); R(16, 10, 2, 3, '#15121c'); R(18, 10, 2, 4, '#15121c'); R(21, 10, 2, 3, '#15121c'); R(23, 10, 3, 5, '#15121c'); R(13, 9, 1, 9, '#15121c'); R(26, 9, 1, 9, '#15121c'); R(16, 6, 4, 1, '#3b2f52'); R(12, 4, 2, 2, '#15121c'); R(26, 4, 2, 2, '#15121c'); },
-  },
-  // Yerobeam (look 'miku'): long teal twin tails with dark hair ties, teal eyes, grey top with a teal tie, a headset mic
-  miku: {
-    skin: '#fbe3d6', eye: '#1fb5ac', shirt: '#9aa3ab', shirtHi: '#b8c0c7',
-    room: (F, t) => { for (let i = 0; i < 6; i++) { const h = 2 + Math.abs(Math.sin(t * 3 + i)) * 4; F(2 + i * 1.4, 26 - h, 1, h, '#39c5bb44'); } F(31, 3, 7, 1, '#39c5bb33'); },
-    back: ({ R, t }) => { const sw = Math.round(Math.sin(t * 2.2)); R(5 + sw, 6, 7, 25, K); R(6 + sw, 7, 5, 24, '#39c5bb'); R(28 - sw, 6, 7, 25, K); R(29 - sw, 7, 5, 24, '#39c5bb'); R(6 + sw, 7, 1, 20, '#8ff0e8'); R(29 - sw, 7, 1, 20, '#8ff0e8'); },
-    clothes: ({ R }) => { R(17, 24, 6, 2, '#5f6870'); R(19, 25, 2, 6, '#39c5bb'); R(10, 25, 2, 6, '#fbe3d6'); R(28, 25, 2, 6, '#fbe3d6'); },
+    clothes: ({ R }) => {
+      R(16, 23, 3, 2, WH); R(21, 23, 3, 2, WH); R(19, 24, 2, 7, WH); // shirt collar and front
+      R(17, 25, 2, 6, '#1a2444'); R(21, 25, 2, 6, '#1a2444'); // vest edges
+      R(19.75, 27, 0.5, 0.5, '#c9c2b4'); R(19.75, 29, 0.5, 0.5, '#c9c2b4'); // buttons
+      R(12, 26, 3, 1, '#d8a63a'); R(12, 25, 0.5, 1, '#d8a63a'); R(13.25, 25.25, 0.5, 0.75, '#d8a63a'); R(14.5, 25, 0.5, 1, '#d8a63a'); // crown pin
+      R(26, 25, 5, 6, K); R(26.5, 25.5, 4, 5.5, '#b98b5a'); R(27, 26.5, 3, 4.5, WH); R(27.75, 25, 1.5, 1, '#9aa3b5'); // clipboard
+      R(27.5, 27.5, 2, 0.4, '#6b7286'); R(27.5, 28.5, 2, 0.4, '#6b7286'); R(27.5, 29.5, 1.5, 0.4, '#3fa66b');
+      R(25, 28, 1.5, 2, '#f0d3bd'); // thumb on the board
+    },
     front: ({ R }) => {
-      R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#39c5bb'); R(14, 10, 3, 3, '#39c5bb'); R(17, 10, 2, 2, '#39c5bb'); R(20, 10, 2, 2, '#39c5bb'); R(22, 10, 4, 3, '#39c5bb'); R(16, 6, 5, 1, '#8ff0e8');
-      R(11, 5, 3, 3, '#2a2a33'); R(26, 5, 3, 3, '#2a2a33'); R(12, 6, 1, 1, '#ff4fa0'); R(27, 6, 1, 1, '#ff4fa0'); // hair ties
-      R(26, 14, 1, 5, '#5f6870'); R(24, 19, 3, 1, '#5f6870'); R(23, 19, 1, 1, K); // headset mic
+      const H = '#2b1d16', HI = '#4a3226';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 4, H); R(19, 6.5, 5, 0.5, HI); R(17, 6, 0.5, 3, '#140d09'); // side part
+      R(17.5, 9, 8.5, 1.5, H); R(14, 9, 3, 1, H); R(22, 10.5, 4, 0.5, H); // fringe swept to his left
+      R(13, 9, 1, 6, H); R(26, 9, 1, 6, H); // short sideburns
+      R(15, 12, 3, 0.5, H); R(22, 12, 3, 0.5, H); // calm straight brows
     },
   },
-  // Omri (look 'ai'): long brown hair with pink streaks, a big pink ribbon, sky-blue eyes, white sailor top with pink trim,
-  // a live chart and floating hearts behind her (she reads the live-stream numbers)
-  ai: {
-    skin: '#fde7dc', eye: '#4aa8f0', shirt: '#f3f1f6', shirtHi: '#ffffff',
+  // Salomo (riset): shoulder-length dark hair parted in the middle, a short beard, plum cardigan with a gold medallion,
+  // a bookshelf and an open scroll behind him (the wise one who reads everything)
+  salomo: {
+    skin: '#e9c4a0', eye: '#3b2a1e', shirt: '#4b2f6b', shirtHi: '#64408c',
     room: (F, t) => {
-      F(29, 6, 9, 7, '#ffffff10'); F(29, 12.5, 9, 0.5, '#ffffff33'); // a little chart panel
-      [2, 4, 3, 5, 6].forEach((h, i) => F(30 + i * 1.6, 12.5 - h, 1, h, i === 4 ? '#ff6fae' : '#8fd3ff88'));
+      F(2, 3, 10, 20, '#3a2a20'); for (const y of [8, 13, 18]) F(2, y, 10, 0.5, '#5a3e2b'); // bookshelf
+      [['#b0413e', '#3d6fe0', '#d8a63a', '#3fa66b'], ['#7a55b0', '#c9c2b4', '#b0413e'], ['#3fa66b', '#d8a63a', '#3d6fe0', '#c9c2b4']]
+        .forEach((row, r) => row.forEach((c, i) => F(2.5 + i * 2.3, 4 + r * 5, 1.6, 4 - (i % 2) * 0.8, c)));
+      F(29, 5, 9, 11, '#efe0bd'); F(28.5, 4.5, 10, 1, '#c9a76a'); F(28.5, 15.5, 10, 1, '#c9a76a'); // scroll
+      for (let y = 7; y < 15; y += 1.5) F(30, y, 7 - (y % 3), 0.4, '#8a7350');
+      F(36, 2, 1, 1, `rgba(255,224,138,${0.4 + 0.4 * Math.sin(t * 3)})`);
+    },
+    back: ({ R }) => { R(12, 7, 16, 16, K); R(13, 8, 14, 15, '#2a1a12'); },
+    clothes: ({ R }) => {
+      R(17, 23, 6, 3, '#efe6d6'); R(19, 25, 2, 6, '#efe6d6'); // shirt under the cardigan
+      R(17.5, 24, 0.5, 3, '#d8a63a'); R(22, 24, 0.5, 3, '#d8a63a'); R(19, 27, 2, 2, '#d8a63a'); R(19.5, 27.5, 1, 1, '#f4d27a'); // medallion
+    },
+    front: ({ R }) => {
+      const H = '#2a1a12';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 4, H); R(19.5, 6, 1, 2, '#170d08'); R(16, 6.5, 3, 0.5, '#4a3226'); // centre part
+      R(14, 9, 4, 1.5, H); R(22, 9, 4, 1.5, H); // bangs swept aside
+      R(12.5, 9, 1.5, 13, H); R(26, 9, 1.5, 13, H); // hair to the shoulders
+      R(15, 12, 3, 0.5, H); R(22, 12, 3, 0.5, H);
+      R(14, 18, 3, 4, H); R(23, 18, 3, 4, H); R(16, 21, 8, 1.5, H); R(17.5, 18, 5, 0.7, H); // beard and moustache
+    },
+  },
+  // Daud (script): auburn curls, freckles, green eyes, a pen behind the ear, denim jacket over a white tee,
+  // a lyre and floating notes behind him (the poet and musician)
+  daud: {
+    skin: '#f6d6be', eye: '#3f8a4f', shirt: '#3d6fa8', shirtHi: '#5a8cc4',
+    room: (F, t) => {
+      F(3, 6, 1, 12, '#c99a4a'); F(9, 6, 1, 12, '#c99a4a'); F(3, 6, 7, 1, '#c99a4a'); F(3, 17, 7, 1.5, '#a87a35'); // lyre
+      for (const x of [5, 6.5, 8]) F(x, 7, 0.25, 10, '#f4e6c0');
+      for (let i = 0; i < 3; i++) { const y = 22 - ((t * 2 + i * 5) % 16), x = 31 + i * 2.5; F(x, y, 1.2, 1, '#ffe08a'); F(x + 0.95, y - 2, 0.25, 2, '#ffe08a'); }
+    },
+    clothes: ({ R }) => {
+      R(17, 23, 6, 3, WH); R(18, 25, 4, 6, WH); // white tee
+      R(15, 24, 3, 2, '#2c5585'); R(22, 24, 3, 2, '#2c5585'); R(12, 27, 3, 2, '#2c5585'); R(25, 27, 3, 2, '#2c5585'); // collar and pockets
+    },
+    front: ({ R }) => {
+      const H = '#b5512a', HI = '#d8743f';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 4, H);
+      R(14, 4.5, 2, 1.5, H); R(17, 4, 2, 2, H); R(21, 4, 2, 2, H); R(24, 4.5, 2, 1.5, H); // curls on top
+      R(14, 10, 2, 2, H); R(16.5, 10, 2, 1.5, H); R(19, 10, 2, 2, H); R(21.5, 10, 2, 1.5, H); R(24, 10, 2, 2, H); // curly fringe
+      R(15, 7, 1, 1, HI); R(19, 6.5, 1, 1, HI); R(23, 7, 1, 1, HI);
+      R(13, 9, 1, 7, H); R(26, 9, 1, 7, H);
+      for (const [x, y] of [[16, 18], [17, 18.5], [23, 18], [24, 18.5]]) R(x, y, 0.5, 0.5, '#c9805a'); // freckles
+      R(26.5, 11, 0.7, 4, '#d8a63a'); R(26.5, 15, 0.7, 0.7, K); // pen behind the ear
+    },
+  },
+  // Saul (planner): black crew cut, strong brows, stubble, olive field jacket with gold epaulettes,
+  // a wall calendar with one day circled and a pinned map (the commander who plans the campaign)
+  saul: {
+    skin: '#d9a982', eye: '#2c1e14', shirt: '#2f3b2a', shirtHi: '#45553d',
+    room: (F) => {
+      F(28, 3, 10, 11, '#e8e4dc'); F(28, 3, 10, 2, '#b0413e'); // calendar
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) F(28.75 + c * 2.3, 6 + r * 2.5, 1.5, 1.5, r === 1 && c === 2 ? '#b0413e' : '#c9c2b4');
+      F(2, 5, 9, 8, '#cdbf98'); F(2, 5, 9, 0.4, '#a8996e'); // map
+      for (const [x, y] of [[3, 11], [4.5, 10], [6, 9.5], [7.5, 8.5]]) F(x, y, 1, 0.4, '#b0413e');
+      F(8.5, 7, 1, 1, '#b0413e'); F(8.85, 8, 0.3, 1, K);
+    },
+    clothes: ({ R }) => {
+      R(16, 23, 8, 2, '#26301f'); R(19.75, 25, 0.5, 6, '#1d2418'); // high collar and zip
+      R(10, 25, 5, 1, '#d8a63a'); R(25, 25, 5, 1, '#d8a63a'); // epaulettes
+      R(12, 28, 3, 0.5, '#1d2418'); R(25, 28, 3, 0.5, '#1d2418');
+    },
+    mouth: ({ R, open }) => { if (open) { R(19, 19, 3, 2, K); R(20, 20, 1, 1, '#7a2e3a'); } else R(18.5, 19.5, 3, 0.5, K); },
+    front: ({ R }) => {
+      const H = '#151210';
+      R(13, 6, 14, 4, K); R(14, 7, 12, 3, H); R(14, 9.5, 12, 0.5, H); R(16, 7.5, 6, 0.5, '#2e2924'); // crew cut
+      R(13, 9, 1, 4, H); R(26, 9, 1, 4, H);
+      R(15, 11.5, 3, 1, H); R(22, 11.5, 3, 1, H); // strong brows
+      R(15, 20.5, 10, 1.5, '#0000001f'); R(14.5, 18, 1, 3, '#0000001a'); R(24.5, 18, 1, 3, '#0000001a'); // stubble
+    },
+  },
+  // Yerobeam (email & brand): light-brown quiff over an undercut, blue eyes, camel blazer and open collar,
+  // a headset mic, envelopes flying past behind him (the persuasive one who builds deals)
+  yerobeam: {
+    skin: '#f1cfb4', eye: '#4a6fa5', shirt: '#b8925e', shirtHi: '#d0ab76',
+    room: (F, t) => {
       for (let i = 0; i < 4; i++) {
-        const y = 27 - ((t * 3 + i * 6) % 24), x = 2 + i * 2.2 + Math.sin(t * 2 + i) * 0.8;
-        F(x, y, 0.5, 0.5, '#ff8fc4aa'); F(x + 1, y, 0.5, 0.5, '#ff8fc4aa'); F(x, y + 0.5, 1.5, 0.5, '#ff8fc4aa'); F(x + 0.5, y + 1, 0.5, 0.5, '#ff8fc4aa');
+        const x = (t * 4 + i * 10) % 44 - 4, y = 3 + i * 6 + Math.sin(t * 2 + i) * 0.8;
+        F(x, y, 3, 2, '#f4efe2'); F(x, y, 3, 0.4, '#d9a2a2'); F(x + 1, y + 0.5, 1, 0.5, '#b9b0a0');
       }
     },
-    back: ({ R }) => { R(11, 7, 18, 24, K); R(12, 8, 16, 23, '#7a4b33'); R(12, 25, 2, 6, '#ff8fc4'); R(26, 25, 2, 6, '#ff8fc4'); },
     clothes: ({ R }) => {
-      R(14, 24, 12, 2, '#ff8fc4'); R(15, 24, 10, 1, WH); // sailor collar with pink trim
-      R(18, 25, 4, 2, '#ff5fa2'); R(19, 27, 2, 2, '#ff5fa2'); // pink ribbon tie
-      R(10, 27, 20, 0.5, '#ffc2dc');
+      R(17, 23, 6, 3, WH); R(19, 25, 2, 6, '#e9e4f0'); // open collar
+      R(16, 25, 3, 6, '#9a7646'); R(21, 25, 3, 6, '#9a7646'); // lapels
+      R(12, 27, 2, 0.5, '#f4efe2'); // pocket square
     },
+    mouth: ({ R, open }) => { if (open) { R(18.5, 19, 3, 2, K); R(19.5, 20, 1, 1, '#7a2e3a'); } else { R(18.5, 19.5, 3, 0.5, K); R(21.5, 19, 0.5, 0.5, K); } }, // easy grin
     front: ({ R }) => {
-      const H = '#7a4b33', HI = '#9a6447', P = '#ff6fae';
-      R(13, 5, 14, 5, K); R(14, 6, 12, 5, H); R(16, 6, 6, 1, HI);
-      R(14, 11, 3, 2, H); R(18, 11, 2, 1, H); R(21, 11, 3, 2, H); R(24, 11, 2, 1, H); // bangs
-      R(17, 7, 1, 4, P); R(23, 8, 1, 3, P); // pink streaks
-      R(12.5, 9, 1.5, 14, H); R(26, 9, 1.5, 14, H); R(12.5, 19, 1.5, 4, P); R(26, 19, 1.5, 4, P); // side locks, pink ends
-      // the big ribbon: two upright loops and a knot
-      R(11, 0, 8, 6, K); R(12, 1, 6, 4, P); R(13, 1, 2, 1, '#ffb3d4');
-      R(21, 0, 8, 6, K); R(22, 1, 6, 4, P); R(25, 1, 2, 1, '#ffb3d4');
-      R(18, 3, 4, 3, K); R(19, 3.5, 2, 2, '#ff4f96');
+      const H = '#8a5a32', HI = '#b07a48';
+      R(14, 4, 12, 6, K); R(15, 4.5, 10, 5, H); R(16, 5, 6, 1, HI); // quiff
+      R(18, 9, 7, 1.5, H); R(14, 9, 4, 1, H);
+      R(13, 9, 1, 5, '#5a3a20'); R(26, 9, 1, 5, '#5a3a20'); // undercut sides
+      R(15, 12, 3, 0.5, H); R(22, 12, 3, 0.5, H);
+      R(25.5, 13, 2, 3, '#3a3a44'); R(26, 16, 1, 3, '#3a3a44'); R(23.5, 19, 3, 0.8, '#3a3a44'); R(23, 19, 0.8, 0.8, K); // headset
     },
   },
-  // Menahem (look 'fern'): long straight violet hair parted in the middle, calm violet eyes, black coat with a white collar,
-  // a ledger sheet and a few coins behind her (she keeps Val's books)
-  fern: {
-    skin: '#fbe6dc', eye: '#8a5fc8', shirt: '#1d1a26', shirtHi: '#2e2a3a',
+  // Yehu (video): spiky black hair under a backwards red cap, red headphones round the neck, black hoodie,
+  // a film strip, a blinking REC light and speed lines behind him (he drives fast)
+  yehu: {
+    skin: '#e7b48f', eye: '#2a1d14', shirt: '#1e1e26', shirtHi: '#2e2e3a',
+    room: (F, t) => {
+      F(0, 1, 40, 4, '#0d0d12'); for (let x = 0.5; x < 40; x += 2.5) { F(x, 1.5, 1, 0.8, '#55556a'); F(x, 3.7, 1, 0.8, '#55556a'); } // film strip
+      F(34, 8, 2, 2, Math.sin(t * 4) > 0 ? '#e0284f' : '#5a1a24'); // REC
+      for (let i = 0; i < 4; i++) { const y = 9 + i * 5, x = 44 - ((t * 30 + i * 13) % 50); F(x, y, 6, 0.4, '#ffffff22'); }
+    },
+    clothes: ({ R }) => {
+      R(14, 23, 12, 2, '#2e2e3a'); // hood round the neck
+      R(15, 23, 10, 1, '#e0284f'); R(14, 22.5, 2, 2.5, '#e0284f'); R(24, 22.5, 2, 2.5, '#e0284f'); // headphones
+      R(17, 25, 0.5, 4, WH); R(22.5, 25, 0.5, 4, WH); // hoodie strings
+    },
+    mouth: ({ R, open }) => { if (open) { R(18, 19, 4, 2, K); R(18.5, 19, 3, 0.6, WH); } else { R(18, 19, 4, 1, K); R(18.5, 19, 3, 0.5, WH); } }, // grin
+    front: ({ R }) => {
+      const H = '#1a1410', C = '#c0262d';
+      R(13, 4, 14, 6, K); R(14, 5, 12, 4.5, C); R(19.5, 4.5, 1, 0.5, '#e05a5a'); // backwards cap
+      R(17, 6, 6, 2.5, H); R(17, 8.5, 6, 0.5, '#d8a63a'); // hair through the strap, the buckle
+      R(14, 9.5, 2, 1.5, H); R(16.5, 9.5, 2, 2, H); R(19, 9.5, 2, 1.5, H); R(21.5, 9.5, 2, 2, H); R(24, 9.5, 2, 1.5, H); // spikes
+      R(13, 9, 1, 5, H); R(26, 9, 1, 5, H);
+      R(15, 12, 3, 0.5, H); R(22, 11.5, 3, 0.5, H); // one brow up
+    },
+  },
+  // Omri (analis data): short black fade, black square glasses, teal sweater over a white collar,
+  // a live bar chart and a line chart behind him (the builder who measures twice)
+  omri: {
+    skin: '#8d5a3b', eye: '#2a1a10', shirt: '#1f6f6a', shirtHi: '#2c8a84',
+    room: (F, t) => {
+      F(28, 24, 10, 0.4, '#ffffff44');
+      for (let i = 0; i < 5; i++) { const h = 3 + i * 1.5 + Math.sin(t + i) * 1; F(28.5 + i * 1.9, 24 - h, 1.2, h, i === 4 ? '#ffd23f' : '#7fd6d0'); }
+      F(2, 4, 10, 8, '#ffffff10'); F(2, 12, 10, 0.4, '#ffffff33');
+      [[2.5, 10], [4, 9], [5.5, 9.5], [7, 7.5], [8.5, 8], [10, 6]].forEach(([x, y]) => F(x, y, 1.5, 0.5, '#7fd6d0'));
+    },
+    clothes: ({ R }) => {
+      R(17, 23, 6, 2, WH); R(18, 25, 4, 1, WH); // shirt collar
+      R(10, 30, 20, 1, '#185a56'); // ribbed hem
+    },
+    front: ({ R }) => {
+      const H = '#120c08';
+      R(13, 6, 14, 4, K); R(14, 6.5, 12, 3.5, H); R(14, 9.5, 12, 0.5, H); R(13, 9, 1, 4, H); R(26, 9, 1, 4, H); // fade
+      R(15, 11.5, 3, 0.5, H); R(22, 11.5, 3, 0.5, H);
+      for (const gx of [14.5, 21.5]) { R(gx, 12.5, 4, 0.5, K); R(gx, 17, 4, 0.5, K); R(gx, 12.5, 0.5, 5, K); R(gx + 3.5, 12.5, 0.5, 5, K); }
+      R(18.5, 14, 3, 0.5, K);
+    },
+  },
+  // Menahem (keuangan): slicked-back hair going grey, a neat moustache, gold half-moon reading glasses,
+  // green cardigan and a red bow tie, a ledger sheet and coins behind him (he counts every coin)
+  menahem: {
+    skin: '#efd0b8', eye: '#5a6b3a', shirt: '#3c5a3a', shirtHi: '#4e7349',
     room: (F, t) => {
       F(2, 4, 9, 11, '#ffffff10'); // the ledger sheet
       for (let y = 6; y < 15; y += 1.5) F(2.5, y, 8, 0.25, '#ffffff22');
@@ -339,19 +383,20 @@ const LOOKS = {
       F(8.5, 13, 1.5, 0.5, `rgba(127,214,140,${0.5 + 0.3 * Math.sin(t * 2)})`); // the running total
       for (const [x, y] of [[31, 24], [33, 24], [32, 22.5]]) { F(x, y, 2, 1.5, '#d8a63a'); F(x + 0.5, y + 0.25, 1, 0.5, '#f4d27a'); }
     },
-    back: ({ R }) => { R(11, 7, 18, 24, K); R(12, 8, 16, 23, '#7a55b0'); R(13, 20, 1, 11, '#9a78d0'); R(26, 20, 1, 11, '#9a78d0'); },
     clothes: ({ R }) => {
-      R(15, 23, 10, 2, K); R(16, 23, 8, 2, '#f4f1f6'); R(19, 25, 2, 1, '#f4f1f6'); // white collar
-      R(19, 26, 2, 5, '#2e2a3a'); R(20, 27, 0.5, 0.5, '#d8a63a'); R(20, 29, 0.5, 0.5, '#d8a63a'); // buttons
+      R(16, 23, 8, 2, WH); R(18, 25, 4, 6, WH); // shirt
+      R(17.5, 24.5, 2, 1.5, '#8a2a2a'); R(20.5, 24.5, 2, 1.5, '#8a2a2a'); R(19.5, 24.75, 1, 1, '#6a1a1a'); // bow tie
+      R(19.75, 27, 0.5, 0.5, '#c9c2b4'); R(19.75, 29, 0.5, 0.5, '#c9c2b4');
     },
     mouth: ({ R, open }) => { if (open) { R(19, 19, 2, 2, K); R(19.5, 20, 1, 1, '#7a2e3a'); } else R(19, 19.5, 2, 0.5, K); },
     front: ({ R }) => {
-      const H = '#7a55b0', HI = '#a588d8';
-      R(13, 5, 14, 5, K); R(14, 6, 12, 5, H); R(19.5, 6, 1, 3, '#5a3d88'); // centre part
-      R(15, 7, 3, 1, HI); R(22, 7, 3, 1, HI);
-      R(14, 11, 4, 1, H); R(14, 12, 2, 1, H); R(22, 11, 4, 1, H); R(24, 12, 2, 1, H); // bangs swept aside
-      R(12.5, 9, 1.5, 14, H); R(26, 9, 1.5, 14, H); // straight side locks
-      R(26, 8, 1.5, 1.5, '#d8a63a'); R(26.25, 8.25, 1, 1, '#f4d27a'); // a small gold hair clip
+      const H = '#4a4440', G = '#a29c96';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 4, H); R(15, 6.5, 9, 0.5, G); R(16, 8, 8, 0.5, G); // slicked back, grey streaks
+      R(13, 9, 1, 6, G); R(26, 9, 1, 6, G); // grey temples
+      R(15, 12, 3, 0.5, G); R(22, 12, 3, 0.5, G);
+      R(17.5, 18, 5, 0.8, H); // moustache
+      for (const gx of [14.5, 21.5]) { R(gx, 15, 4, 0.5, '#d8a63a'); R(gx, 17, 4, 0.5, '#d8a63a'); R(gx, 15, 0.5, 2.5, '#d8a63a'); R(gx + 3.5, 15, 0.5, 2.5, '#d8a63a'); }
+      R(18.5, 15.5, 3, 0.4, '#d8a63a'); // half-moon reading glasses
     },
   },
 };
@@ -417,11 +462,11 @@ function addLine(kind, who, text, at = Date.now()) {
   li.innerHTML = kind === 'sys' ? `${esc(who)} ${esc(text)} · ${hhmm(at)}` : `<span class="who">${esc(who)}<time>${hhmm(at)}</time></span>${esc(text)}`;
   logEl.appendChild(li);
   while (logEl.children.length > 120) logEl.firstChild.remove();
-  if (near || kind === 'val') logEl.scrollTop = logEl.scrollHeight;
+  if (near || kind === 'bos') logEl.scrollTop = logEl.scrollHeight;
 }
 const note = (who, text) => addLine('sys', who, text);
 
-let chatSince = Date.now() - 6 * 3600_000, lastChatId = 0, valSaid = { text: '', at: 0 }, senaSaid = { text: '', at: 0 };
+let chatSince = Date.now() - 6 * 3600_000, lastChatId = 0, bosSaid = { text: '', at: 0 }, mgrSaid = { text: '', at: 0 };
 const said = {}; // what each teammate last said in the chat
 async function pollChat() {
   try {
@@ -429,9 +474,9 @@ async function pollChat() {
     for (const m of messages) {
       if (m.id <= lastChatId) continue;
       lastChatId = m.id; chatSince = Math.max(chatSince, m.timestamp - 1);
-      if (m.sender === 'Val') { addLine('val', 'Val', m.text, m.timestamp); valSaid = { text: m.text, at: m.timestamp }; }
-      if (m.sender === 'Sena') { addLine('sena', 'Sena', m.text, m.timestamp); senaSaid = { text: m.text, at: m.timestamp }; }
-      else if (NAME_TO_ID[String(m.sender).toLowerCase()] && m.sender !== 'Val') { // a teammate answering in the group chat
+      if (m.sender === BOS) { addLine('bos', BOS, m.text, m.timestamp); bosSaid = { text: m.text, at: m.timestamp }; }
+      else if (m.sender === MGR) { addLine('manager', MGR, m.text, m.timestamp); mgrSaid = { text: m.text, at: m.timestamp }; }
+      else if (NAME_TO_ID[String(m.sender).toLowerCase()]) { // a teammate answering in the group chat
         addLine('agent', m.sender, m.text, m.timestamp); said[NAME_TO_ID[m.sender.toLowerCase()]] = { text: m.text, at: m.timestamp };
       }
     }
@@ -446,7 +491,7 @@ async function send() {
   if (!text) return;
   sendBtn.disabled = true;
   try {
-    const r = await fetch('/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: 'Val', text }) });
+    const r = await fetch('/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: BOS, text }) });
     if (!r.ok) throw new Error(r.status);
     box.value = '';
     pollChat();
@@ -480,7 +525,7 @@ function say(status) {
 const THINK = ['Hmm… lagi mikir.', 'Bentar, brainstorming dulu…', 'Kayaknya aku punya ide…', 'Nyusun rencananya…'];
 
 // ---------- live data from the office server ----------
-let prev = {}, senaIdleSince = Date.now(), bosSpokeAt = 0;
+let prev = {}, mgrIdleSince = Date.now(), bosSpokeAt = 0;
 const promptSeen = {};
 
 async function poll() {
@@ -494,28 +539,28 @@ async function poll() {
     return;
   }
   const now = Date.now(), cur = {};
-  // Sena = the Claude session you talk to (the office's own chat bot is left out)
-  // sessions the chat bridge runs for a teammate (or its router) are not Sena
+  // the manager = the Claude session you talk to (the office's own chat bot is left out)
+  // sessions the chat bridge runs for a teammate (or its router) are not the manager
   const owner = rapat.sessions || {}, router = new Set(rapat.router || []), busy = rapat.working || {};
-  const own = {}; for (const s of sessions.sessions || []) if (owner[s.id] && owner[s.id] !== 'sena') own[owner[s.id]] = s;
-  const main = (sessions.sessions || []).filter((s) => s.title !== 'agent-office-bot' && s.main && !router.has(s.id) && !(owner[s.id] && owner[s.id] !== 'sena'))
+  const own = {}; for (const s of sessions.sessions || []) if (owner[s.id] && owner[s.id] !== 'manager') own[owner[s.id]] = s;
+  const main = (sessions.sessions || []).filter((s) => s.title !== 'agent-office-bot' && s.main && !router.has(s.id) && !(owner[s.id] && owner[s.id] !== 'manager'))
     .sort((a, b) => (b.lastActivityAt || 0) - (a.lastActivityAt || 0))[0];
   if (main) {
-    const st = main.main.state, working = st === 'working' || st === 'compacting' || !!busy.sena, needs = st === 'needs-you';
-    cur.sena = working ? 'kerja' : needs ? 'izin' : 'diam';
-    if (working || needs) senaIdleSince = now;
+    const st = main.main.state, working = st === 'working' || st === 'compacting' || !!busy.manager, needs = st === 'needs-you';
+    cur.manager = working ? 'kerja' : needs ? 'izin' : 'diam';
+    if (working || needs) mgrIdleSince = now;
     const fresh = main.lastStatusAt && now - main.lastStatusAt < 6000;
-    const replied = now - senaSaid.at < 9000; // her last chat reply stays in the bubble for a moment
-    const line = needs ? 'Val, aku butuh izin kamu di Claude ya 🙏' : working ? (fresh && say(main.lastStatus)) || THINK[Math.floor(now / 5000) % THINK.length] : replied ? clip(senaSaid.text) : '';
-    setTile('sena', { talking: working || replied, needs, chip: 'nunggu brief', say: line, idleFor: now - senaIdleSince });
+    const replied = now - mgrSaid.at < 9000; // his last chat reply stays in the bubble for a moment
+    const line = needs ? `${BOS}, aku butuh izin kamu di Claude ya 🙏` : working ? (fresh && say(main.lastStatus)) || THINK[Math.floor(now / 5000) % THINK.length] : replied ? clip(mgrSaid.text) : '';
+    setTile('manager', { talking: working || replied, needs, chip: 'nunggu brief', say: line, idleFor: now - mgrIdleSince });
     // a brief typed in a Claude window (not this chat) gets a line; each session is tracked on its own
     const lp = main.main.lastPromptAt, seenLp = promptSeen[main.id];
-    if (lp && lp !== seenLp) { if (seenLp && now - valSaid.at > 8000) note('Val', 'kasih brief ke Sena lewat Claude'); promptSeen[main.id] = lp; bosSpokeAt = Math.max(bosSpokeAt, lp); }
-  } else setTile('sena', { chip: 'belum join' });
-  const valTalk = now - valSaid.at < 6000;
-  setTile('bos', { talking: valTalk || now - bosSpokeAt < 2500, chip: '', say: valTalk ? clip(valSaid.text) : '' });
+    if (lp && lp !== seenLp) { if (seenLp && now - bosSaid.at > 8000) note(BOS, `kasih brief ke ${MGR} lewat Claude`); promptSeen[main.id] = lp; bosSpokeAt = Math.max(bosSpokeAt, lp); }
+  } else setTile('manager', { chip: 'belum join' });
+  const bosTalk = now - bosSaid.at < 6000;
+  setTile('bos', { talking: bosTalk || now - bosSpokeAt < 2500, chip: '', say: bosTalk ? clip(bosSaid.text) : '' });
   const typing = Object.keys(busy).map((id) => tiles.get(id)?.a.name).filter(Boolean);
-  if (cur.sena === 'kerja' && !typing.includes('Sena')) typing.unshift('Sena');
+  if (cur.manager === 'kerja' && !typing.includes(MGR)) typing.unshift(MGR);
   document.getElementById('typing').textContent = typing.length ? `${typing.join(', ')} lagi ngetik…` : '';
 
   const byId = {};
@@ -536,7 +581,7 @@ async function poll() {
     if (ag || chatting || spoke) r.since = now;
     setTile(a.id, { talking: !!ag || chatting || spoke, chip: 'standby', say: line, idleFor: now - r.since });
   }
-  if (prev.sena && prev.sena !== cur.sena && cur.sena === 'izin') note('Sena', 'butuh izin kamu');
+  if (prev.manager && prev.manager !== cur.manager && cur.manager === 'izin') note(MGR, 'butuh izin kamu');
   prev = cur;
   const live = Object.values(cur).filter((v) => v === 'kerja' || v === 'chat').length;
   document.getElementById('count').textContent = `${TEAM.length} peserta · ${live} lagi kerja`;

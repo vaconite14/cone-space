@@ -36,8 +36,9 @@ Cone Space dipakai di 1 komputer khusus (Windows); GitHub dipakai sebagai backup
 ## Setiap hari
 
 - Mulai kerja: klik **Cone Space** di Desktop (ambil versi terbaru dari GitHub, nyalakan server, lalu buka rapat video).
-  Dua jendela hitam kecil di taskbar ("Claude Office server" dan "Sena bridge") jangan ditutup selama kerja.
-- Kerjaan lewat chat Sena otomatis di-backup ke GitHub setelah setiap jawaban.
+  Server kantor dan bridge tim jalan tanpa jendela (catatannya di `.office-server.log` dan `.sena-bridge.log`)
+  dan ikut mati saat komputer dimatikan.
+- Kerjaan lewat chat Hizkia otomatis di-backup ke GitHub setelah setiap jawaban.
 - Kerja lewat sesi Claude biasa atau edit file sendiri: klik **`Sinkron.cmd`** untuk backup.
 
 ## Kalau rapat video tidak terbuka ("This site can't be reached")
@@ -53,5 +54,5 @@ Kalau `Test-Path` menjawab `False`, build ulang: `npm.cmd install --no-fund --no
 ## Yang tidak ikut ke GitHub
 
 - Login Claude, GitHub, Google Drive.
-- Riwayat chat Sena di rapat video (hasil kerjanya tetap ter-backup).
+- Riwayat chat tim di rapat video (hasil kerjanya tetap ter-backup).
 - File video (MP4/MOV/WebM) dan hasil render di `out/` / `render/`: tetap di komputer ini saja.

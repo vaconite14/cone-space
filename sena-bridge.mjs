@@ -1,9 +1,9 @@
 // Team bridge: the video call's chat works like a group chat with the whole office.
-// Polls the office chat for messages from Val. A small, cheap "router" call reads each message and decides who
-// answers (whoever Val calls by name, a few teammates for a general message, Sena when nobody fits) and how
+// Polls the office chat for messages from Sena (the boss). A small, cheap "router" call reads each message and decides who
+// answers (whoever Sena calls by name, a few teammates for a general message, Hizkia the manager when nobody fits) and how
 // heavy the answer is: "ringan" (small talk, a cheap model), "diskusi" (a thoughtful talk, a mid model) or
 // "kerja" (real work with tools, the full model). Each teammate runs as its own Claude Code session
-// (--agent <type>, Sena as the main session) and posts its reply to the chat under its own name.
+// (--agent <type>, Hizkia as the main session) and posts its reply to the chat under its own name.
 // Sessions are kept across messages in .sena-session.json; each teammate handles its messages one at a time.
 // Which session belongs to whom goes to claude-office/dist/rapat-status.json so the call page can light the right tile.
 //
@@ -20,7 +20,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const STATE = join(HERE, '.sena-session.json');
 const LOCK = join(HERE, '.sena-bridge.pid');
 const STATUS = join(HERE, 'claude-office', 'dist', 'rapat-status.json');
-const FROM = 'Val';
+const FROM = 'Sena'; // the boss
 const CLAUDE = join(process.env.APPDATA || '', 'npm', 'claude.cmd');
 const MAX_REPLIES = 3;
 // the router replaces Claude Code's long default system prompt with this one line
@@ -40,9 +40,9 @@ const unlock = () => { try { if (Number(readFileSync(LOCK, 'utf8')) === process.
 process.on('exit', unlock);
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => process.exit(0));
 
-// The team: `type` is the subagent type (null = Sena, the main session), `name` is how they sign in the chat
+// The team: `type` is the subagent type (null = Hizkia, the manager in the main session), `name` is how they sign in the chat
 const TEAM = {
-  sena: { name: 'Sena', type: null, about: 'Manager kantor: koordinasi, status tugas, brief umum, apa pun yang tidak jelas untuk siapa' },
+  manager: { name: 'Hizkia', type: null, about: 'Manager kantor: koordinasi, status tugas, brief umum, apa pun yang tidak jelas untuk siapa' },
   'riset-tren': { name: 'Salomo', type: 'riset-tren', about: 'riset tren, ide & kompetitor' },
   scriptwriter: { name: 'Daud', type: 'scriptwriter', about: 'naskah, caption, copy, judul & deskripsi' },
   planner: { name: 'Saul', type: 'planner', about: 'kalender, jadwal, timeline & strategi' },
@@ -52,7 +52,7 @@ const TEAM = {
   keuangan: { name: 'Menahem', type: 'keuangan', about: 'pencatatan keuangan & budget di Google Sheets' },
 };
 
-// Model and tools per tier. "kerja" keeps the old bridge's tools (approved by Val on 2026-10-28: shell for Yehu's renders;
+// Model and tools per tier. "kerja" keeps the old bridge's tools (approved by the boss on 2026-10-28: shell for Yehu's renders;
 // CLAUDE.md limits what the shell is used for); an --agent session is further limited to its own agent's tools.
 // "lean" tiers load only their few tools: no MCP connectors and no skills, which keeps a chat reply to a few thousand tokens.
 const LEAN = ['--strict-mcp-config', '--disable-slash-commands'];
@@ -65,8 +65,8 @@ const TIERS = {
 const state = existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf8')) : {};
 state.since ??= Date.now();
 state.sessions ??= {};
-// the old single-thread bridge kept Sena's session at the top level
-if (state.sessionId && !state.sessions.sena) state.sessions.sena = { id: state.sessionId, started: !!state.started };
+// the manager used to be Sena (the boss's name now): Hizkia starts a fresh session instead of resuming hers
+delete state.sessions.sena;
 delete state.sessionId; delete state.started;
 const save = () => writeFileSync(STATE, JSON.stringify(state, null, 1));
 save();
@@ -111,15 +111,15 @@ function runClaude(args, input) {
 // The router: one cheap call, no tools, no saved session; answers with JSON only
 async function route(text, ctx) {
   const roster = Object.entries(TEAM).map(([id, t]) => `- ${id} (${t.name}): ${t.about}`).join('\n');
-  const ask = `Kamu pengatur giliran bicara di grup chat kantor Val. Tentukan siapa yang menjawab pesan terbaru Val dan seberat apa jawabannya.
+  const ask = `Kamu pengatur giliran bicara di grup chat kantor ${FROM}. Tentukan siapa yang menjawab pesan terbaru ${FROM} dan seberat apa jawabannya.
 
 Anggota:
 ${roster}
 
 Aturan:
-- Kalau Val memanggil nama tertentu (atau jelas mengajak bicara orang tertentu), HANYA mereka yang menjawab, kecuali Val juga minta pendapat yang lain.
-- Pesan untuk semua orang (sapaan, "gimana semuanya", pengumuman) dijawab 2-3 anggota yang paling nyambung; Sena boleh ikut.
-- Pesan tanpa sasaran jelas: pilih 1 anggota yang paling relevan; kalau tidak ada yang cocok, Sena.
+- Kalau ${FROM} memanggil nama tertentu (atau jelas mengajak bicara orang tertentu), HANYA mereka yang menjawab, kecuali ${FROM} juga minta pendapat yang lain.
+- Pesan untuk semua orang (sapaan, "gimana semuanya", pengumuman) dijawab 2-3 anggota yang paling nyambung; Hizkia boleh ikut.
+- Pesan tanpa sasaran jelas: pilih 1 anggota yang paling relevan; kalau tidak ada yang cocok, Hizkia.
 - Maksimal ${MAX_REPLIES} anggota.
 - tier "ringan": basa-basi, sapaan, bercanda, pertanyaan singkat yang bisa dijawab langsung.
 - tier "diskusi": diskusi serius, minta pendapat/strategi/analisis, pertimbangan penting, tapi belum minta dibuatkan sesuatu.
@@ -128,7 +128,7 @@ Aturan:
 Obrolan terakhir:
 ${ctx || '(belum ada)'}
 
-Pesan terbaru Val: ${text}
+Pesan terbaru ${FROM}: ${text}
 
 Balas HANYA JSON tanpa teks lain, contoh: {"replies":[{"agent":"riset-tren","tier":"ringan"}]}`;
   const id = randomUUID();
@@ -145,7 +145,7 @@ Balas HANYA JSON tanpa teks lain, contoh: {"replies":[{"agent":"riset-tren","tie
       .slice(0, MAX_REPLIES);
     if (picks.length) return picks;
   } catch { console.error('[tim] router gagal:', r.error || String(r.result).slice(0, 200)); }
-  return [{ agent: 'sena', tier: 'kerja' }]; // when unsure, Sena handles it like before
+  return [{ agent: 'manager', tier: 'kerja' }]; // when unsure, the manager handles it like before
 }
 
 async function askMember(who, tier, text, ctx) {
@@ -159,20 +159,20 @@ async function askMember(who, tier, text, ctx) {
     ...(tr.model ? ['--model', tr.model] : []),
     ...(t.type ? ['--agent', t.type] : []),
     ...(s.started ? ['--resume', s.id] : ['--session-id', s.id])];
-  const me = t.type ? `Kamu ${t.name} (bukan Sena); aturan kantor di CLAUDE.md tetap berlaku, tapi jawab sebagai dirimu sendiri. ` : '';
-  const input = `[Pesan dari Val lewat chat rapat video (grup chat tim). ${me}${tr.note} Jangan tulis nama atau label di awal balasan.]
+  const me = t.type ? `Kamu ${t.name} (bukan Hizkia); aturan kantor di CLAUDE.md tetap berlaku, tapi jawab sebagai dirimu sendiri. ` : '';
+  const input = `[Pesan dari ${FROM} lewat chat rapat video (grup chat tim). ${me}${tr.note} Jangan tulis nama atau label di awal balasan.]
 
 Obrolan terakhir:
 ${ctx || '(belum ada)'}
 
-Val: ${text}`;
+${FROM}: ${text}`;
   const r = await runClaude(args, input);
   if (r.ok) { if (!s.lean) { s.started = true; save(); } console.log(`[tim] ${t.name} (${tier}, ${tr.model || 'model penuh'}): $${(r.total_cost_usd || 0).toFixed(4)}`); }
-  if (!r.ok) return `Maaf Val, aku gagal jalan (${r.error})`;
-  return r.is_error ? `Maaf Val, ada kendala: ${r.result || r.subtype}` : r.result;
+  if (!r.ok) return `Maaf ${FROM}, aku gagal jalan (${r.error})`;
+  return r.is_error ? `Maaf ${FROM}, ada kendala: ${r.result || r.subtype}` : r.result;
 }
 
-// After real work, save and share it with Val's other devices (Sinkron.cmd: commit, pull --rebase, push)
+// After real work, save and share it with the boss's other devices (Sinkron.cmd: commit, pull --rebase, push)
 let syncing = Promise.resolve();
 function sync() {
   if (!existsSync(join(HERE, '.git'))) return syncing;
@@ -182,7 +182,7 @@ function sync() {
     child.stdout.on('data', (d) => (out += d));
     child.on('close', async (code) => {
       console.log(`[tim] sync ${code === 0 ? 'ok' : 'failed'}`);
-      if (code !== 0) await post('Sena', `⚠ Sinkron ke GitHub gagal: ${out.trim().split('\n').pop() || 'cek terminal'}`).catch(() => {});
+      if (code !== 0) await post(TEAM.manager.name, `⚠ Sinkron ke GitHub gagal: ${out.trim().split('\n').pop() || 'cek terminal'}`).catch(() => {});
       resolve();
     });
   }));
@@ -196,9 +196,9 @@ async function routeNext() {
   if (routing || !inbox.length) return;
   routing = true;
   const m = inbox.shift();
-  console.log(`[tim] Val: ${m.text}`);
+  console.log(`[tim] ${FROM}: ${m.text}`);
   const ctx = history.join('\n'); // what was said before this message
-  remember('Val', m.text);
+  remember(FROM, m.text);
   const picks = await route(m.text, ctx);
   console.log(`[tim] -> ${picks.map((p) => `${TEAM[p.agent].name}(${p.tier})`).join(', ')}`);
   for (const p of picks) {

@@ -8,7 +8,7 @@ git add -A
 git diff --cached --quiet || git commit -q -m "Sinkron dari %COMPUTERNAME%"
 git pull --rebase --autostash -q
 if errorlevel 1 (
-  echo [!] Ada perubahan yang bentrok dengan device lain. Minta Sena: "bantu beresin sinkron git".
+  echo [!] Ada perubahan yang bentrok dengan device lain. Minta Hizkia: "bantu beresin sinkron git".
   exit /b 1
 )
 git push -q

@@ -11,7 +11,7 @@ render/
 **/render/
 *.mp4.tmp
 
-# Video output stays internal to each device: never pushed (Val's rule)
+# Video output stays internal to each device: never pushed (Sena's rule)
 *.mp4
 *.mov
 *.webm

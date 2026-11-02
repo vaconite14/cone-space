@@ -1,11 +1,11 @@
 # 🏢 Cone Space — Panduan
 
-Kantor virtual berisi tim agen AI yang dikoordinasi Sena (Manager). Salinan sistem dari kantor Val yang lain,
+Kantor virtual berisi tim agen AI yang dikoordinasi Hizkia (Manager). Salinan sistem dari kantor Sena yang lain,
 dikosongkan untuk scope baru: isi klien/proyek dan sesuaikan agennya sesuai kebutuhan.
 
 | | Agen | Kerjaannya |
 |---|---|---|
-| 👓 | **Sena** – Manager | Terima brief, bagi tugas, cek hasil, lapor ke kamu |
+| 📋 | **Hizkia** – Manager | Terima brief, bagi tugas, cek hasil, lapor ke kamu |
 | 🔎 | **Salomo** – Riset Tren & Ide | Tren, ide, analisis kompetitor (pakai web search) |
 | 📊 | **Omri** – Analis Data | Analisis data/performa dari file yang kamu berikan, rekap + grafik |
 | ✍️ | **Daud** – Scriptwriter & Caption | Naskah video pendek/panjang, carousel, thread, caption |
@@ -15,20 +15,20 @@ dikosongkan untuk scope baru: isi klien/proyek dan sesuaikan agennya sesuai kebu
 | 💰 | **Menahem** – Keuangan | Catat transaksi & cek budget di Google Sheets |
 
 Klien/proyek ada di `office/klien/<klien>/` (lihat `office/klien/README.md`): `CLAUDE.md` berisi aturan,
-`docs/` berisi pengetahuan, dan folder kerja. Daftarkan setiap klien di tabel "Pekerjaan Val" di `CLAUDE.md`.
+`docs/` berisi pengetahuan, dan folder kerja. Daftarkan setiap klien di tabel "Pekerjaan Sena" di `CLAUDE.md`.
 
 ## Mulai pakai
-1. Isi tabel klien di `CLAUDE.md` dan buat folder kliennya (atau minta Sena: "bantu aku siapin klien baru, tanya aku satu-satu").
+1. Isi tabel klien di `CLAUDE.md` dan buat folder kliennya (atau minta Hizkia: "bantu aku siapin klien baru, tanya aku satu-satu").
 2. Klik dua kali `Mulai-Kantor.cmd` (atau shortcut **Cone Space** di Desktop) untuk membuka **rapat video tim**: tiap agen tampil sebagai avatar pixel art, menyala hijau dan ngomong lewat gelembung chat saat bekerja.
 3. Kasih brief langsung dari panel **Chat** di rapat video (dijawab lewat `sena-bridge.mjs`, yang ikut dinyalakan `Mulai-Kantor.cmd`),
    atau buka sesi Claude Code di folder ini, lalu kasih brief.
 
 ## Struktur
 ```
-CLAUDE.md                 ← instruksi Manager (Sena) + alur kerja
+CLAUDE.md                 ← instruksi Manager (Hizkia) + alur kerja
 .claude/agents/           ← definisi tiap agen
 office/klien/             ← satu folder per klien/proyek
-office/data/tasks.js      ← catatan tugas (diupdate Sena), dibaca office/dashboard.html
+office/data/tasks.js      ← catatan tugas (diupdate Hizkia), dibaca office/dashboard.html
 video/                    ← proyek video Remotion (dibuat saat dibutuhkan)
 ```
 

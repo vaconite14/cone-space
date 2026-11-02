@@ -51,12 +51,13 @@ $lnk.WorkingDirectory = $root
 $lnk.Save()
 
 Step 'Login'
-& git config user.name 'Val Aconite'
+& git config user.name 'Val Aconite' git config user.name 'Val Aconite'
+& git config user.email 'valaconite@gmail.com'
 & git config http.postBuffer 524288000 # big pushes (renders, assets) were reset mid-way without it
 & git config http.version HTTP/1.1
 # status checks go through cmd: in PowerShell 5.1 a redirected native stderr would stop this script
 cmd /c "gh auth status >nul 2>&1"; if ($LASTEXITCODE -ne 0) { Write-Host 'Login GitHub (untuk sinkron):'; gh auth login --web --git-protocol https }
 gh auth setup-git
-cmd /c "claude auth status >nul 2>&1"; if ($LASTEXITCODE -ne 0) { Write-Host 'Login Claude (untuk Sena di chat):'; & claude.cmd auth login }
+cmd /c "claude auth status >nul 2>&1"; if ($LASTEXITCODE -ne 0) { Write-Host 'Login Claude (untuk Hizkia di chat):'; & claude.cmd auth login }
 
 Write-Host "`nSelesai! Buka 'Cone Space' di Desktop. Login Claude di aplikasi desktop dan Google Drive tetap per device." -ForegroundColor Green

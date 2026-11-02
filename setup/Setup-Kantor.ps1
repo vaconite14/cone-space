@@ -51,7 +51,7 @@ $lnk.WorkingDirectory = $root
 $lnk.Save()
 
 Step 'Login'
-& git config user.name 'Val Aconite' git config user.name 'Val Aconite'
+& git config user.name 'Val Aconite'
 & git config user.email 'valaconite@gmail.com'
 & git config http.postBuffer 524288000 # big pushes (renders, assets) were reset mid-way without it
 & git config http.version HTTP/1.1

@@ -1,44 +1,107 @@
 # Panduan Keuangan (Menahem)
 
-> Status: **DRAFT, belum dikonfirmasi Sena.** Selama status ini, Menahem hanya membaca sheet.
-> Mode: uji coba. Draft baris dikirim di chat, ditulis ke sheet hanya setelah Sena bilang oke.
-> File ini hanya berisi struktur dan aturan. Tidak ada nomor rekening, saldo, atau mutasi mentah.
+> Status: **DRAFT, menunggu konfirmasi Sena** untuk poin-poin bertanda (?) di bawah.
+> Mode: uji coba. Draft baris dikirim di chat dan ditulis ke sheet hanya setelah Sena bilang oke.
+> File ini hanya berisi struktur dan aturan, tanpa nomor rekening, saldo, atau mutasi mentah.
 
-## Spreadsheet
-- Nama: **KEUNGAN CAINI** (template "versi Maret 2026")
+## Cakupan
+Menahem **hanya** memegang sheet **KEUNGAN CAINI**. Sheet "Keuangan Format Keren" (milik Val) tidak disentuh;
+logika pencatatannya (`panduan-logika-pencatatan.md`) dipakai sebagai dasar, lalu disesuaikan untuk CAINI di bawah ini.
+Kalau aturan di file ini berbeda dengan panduan Format Keren, **file ini yang menang** untuk CAINI.
+
+- Nama: **KEUNGAN CAINI** (template "versi Maret 2026"), locale `en_US`, zona waktu Asia/Bangkok (= WIB)
 - ID: `1ee7TjTLNG7cmBPm4bV4QDVbdLutxhXVr7zsvkjyKfvE`
 - Link: https://docs.google.com/spreadsheets/d/1ee7TjTLNG7cmBPm4bV4QDVbdLutxhXVr7zsvkjyKfvE/edit
-- Locale `en_US`, zona waktu `Asia/Bangkok` (sama dengan WIB)
 
-## Tab input (boleh ditulis setelah disetujui)
-Semua tab input: header di **baris 6**, data mulai **baris 7**, kolom A kosong.
+## 1. Struktur sheet
+Hanya tab berawalan `Catat -` yang diisi. Header di **baris 6**, data mulai **baris 7**, kolom A kosong.
 
-| Tab | Kolom (B → ...) |
+| Tab | Kolom |
 |---|---|
-| `Catat - Pengeluaran` | Tanggal, Kategori, Rincian, Rekening, Nominal |
-| `Catat - Pendapatan` | Tanggal, Kategori, Rincian, Rekening, Nominal |
-| `Catat - Pindah Kas/Nabung` | Tanggal, Dari Rekening, Ke Rekening, Nominal, Biaya Admin |
-| `Catat - Utang`, `Catat - Piutang`, `Catat - Beli Jual Barang`, `Catat - Investasi` | belum dipelajari, baca dulu sebelum dipakai |
+| `Catat - Pengeluaran` | B:F = Tanggal, Kategori, Rincian, Rekening, Nominal |
+| `Catat - Pendapatan` | B:F = Tanggal, Kategori, Rincian, Rekening, Nominal |
+| `Catat - Pindah Kas/Nabung` | B:F = Tanggal, Dari Rekening, Ke Rekening, Nominal, Biaya Admin. Tabel saldo per rekening di H9:I16, Total Kas di I2 |
+| `Catat - Utang`, `Catat - Piutang`, `Catat - Beli Jual Barang`, `Catat - Investasi` | belum dipakai/dipelajari; baca strukturnya dulu sebelum menulis |
 
-Format: tanggal ditulis sebagai tanggal (tampil `M/D/YYYY`), nominal angka polos tanpa "Rp" dan tanpa titik.
+Tab lain (DASHBOARD, Profil, Laporan, Atur Budgeting, Mutasi Rekening Otomatis, Financial Goal Tracker, backend,
+tab tersembunyi) terhitung otomatis: **jangan ditimpa**. `Atur Budgeting` hanya dibaca untuk cek budget.
 
-## Tab yang TIDAK boleh disentuh
-`DASHBOARD`, `Profil ...`, `Cek Kesehatan Finansial`, `Level Kekayaan`, `Saran Budgeting`, `Pergerakan Kekayaan Bersih`,
-`Laporan ...`, `Atur Budgeting` (hanya dibaca untuk cek budget), `Mutasi Rekening Otomatis` (terisi otomatis),
-`Financial Goal Tracker`, `backend`, dan tab tersembunyi (`CARA PAKAI`, `Tutorial`, `Analisa`, `Cash Flow`).
+## 2. Rekening di sheet CAINI
+BCA, GoPay, Uang Tunai, OCBC, CIMB, SOCIABUZZ, TIKTOK.
+- OCBC: rekening yang menerima gaji dari SGD (Bareness, gaji worker); biasanya diteruskan ke BCA.
+- SOCIABUZZ, TIKTOK: saldo platform (pendapatan Vtuber) sebelum ditarik. (?) konfirmasi.
+- Akhiran nomor GoPay/rekening milik Caini: (?) belum diketahui. Ini penting untuk aturan top up di bagian 4.
 
-## Kategori yang sudah dipakai
-Pakai persis seperti ini. Kategori baru hanya ditambah oleh Sena (lewat `Atur Budgeting`).
-
+## 3. Kategori (pakai persis, kategori baru hanya ditambah Sena)
 - **Pengeluaran:** Asuransi, BPJS, Daily Food, Darurat, Digital, Gaji Worker, Gigi, Household, Iuran Pemuda, Jajan,
   Keluarga, Pajak, Persembahan, Perpuluhan, Sedekah, Self Reward, SG26, Transport, Vtuber, Weekend, Wifi
 - **Pendapatan:** Bunga Tabungan, Gaji, Gaji Worker, Hadiah, Iuran Wifi, Lainnya, Vtuber
 
-## Rekening (nama saja)
-Yang sudah terlihat: BCA, GoPay, Uang Tunai, OCBC, CIMB. **Perlu konfirmasi Sena** apakah ada yang lain.
+Kategori Format Keren yang **tidak ada** di CAINI (Pemborosan, Living, Cooking, Jualan, SpayLater, Freelance,
+Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 5.
 
-## Aturan pencatatan
-- Transfer antar rekening sendiri (tarik/setor tunai, top up GoPay) → `Catat - Pindah Kas/Nabung`, bukan pengeluaran.
-  Biaya admin transfer ditulis di kolom Biaya Admin.
-- Sebelum menulis: baca baris terakhir, tulis di baris kosong berikutnya, cek duplikat (tanggal + nominal + rincian).
-- Setelah menulis: baca ulang barisnya.
+## 4. Aturan penulisan (dari panduan Format Keren, berlaku di CAINI)
+- Tanggal ditulis `M/D/YYYY` sesuai **tanggal posting bank**, nominal angka polos tanpa Rp dan tanpa titik.
+- **Tidak boleh ada baris kosong** di tengah tabel. **Selalu urut tanggal (lama → baru)** di Pengeluaran, Pendapatan,
+  dan Pindah Kas; setelah menulis, urutkan kolom B:F tanpa header.
+- **Baris kosong pertama dicari dari data** (`get_values` kolom B sampai ujung), lalu cek tujuannya masih kosong sebelum
+  menulis. Tulis per blok 40-60 baris. Kalau grid habis, tambah baris dan salin format serta dropdown dari baris contoh.
+- Hanya satu penulis pada satu waktu.
+- Cek duplikat (tanggal + nominal + rincian) sebelum menambah baris. Nominal kembar di hari yang sama bukan otomatis
+  ganda; cocokkan dengan mutasi.
+- Anomali lama tidak diperbaiki diam-diam: buat daftar dan tanyakan Sena. Selisih akhir yang tidak ada sebabnya diselesaikan
+  dengan satu baris penyesuaian, dan hanya dengan persetujuan Sena.
+- Setelah menulis, baca ulang baris yang ditulis.
+- **Rincian:** CAINI selama ini memakai deskripsi singkat ("tije", "mrt", "Gaji Bareness"), bukan teks mutasi mentah.
+  (?) Ikuti gaya CAINI, atau pakai teks mutasi seperti di Format Keren?
+
+## 5. Logika Pindah Kas (disesuaikan)
+- Pindah antar rekening sendiri dicatat **satu kali** di Pindah Kas, bukan sebagai pengeluaran + pemasukan.
+- Pola yang sudah ada di CAINI:
+  - BCA → GoPay (top up): nominal bersih + Biaya Admin Rp1.000. Contoh: mutasi Rp200.000 = Rp199.000 dipindah + Rp1.000 admin.
+  - BCA → Uang Tunai (tarik tunai): admin Rp0, kecuali bank memotong (pernah Rp2.500).
+  - Uang Tunai → BCA (setor tunai), OCBC → BCA, CIMB → OCBC: admin Rp0 kecuali bank memotong.
+- Sisi pencatatan: transaksi yang melibatkan BCA dicatat dari sisi BCA. Sebelum mencatat dari rekening lain, cek dulu
+  barisnya belum ada.
+- Top up GoPay hanya masuk Pindah Kas kalau tujuannya GoPay milik Caini; top up ke nomor lain = Pengeluaran. (?) akhiran nomor.
+- Top up GoPay yang tidak ada pasangannya di BCA = uang masuk dari luar = Pendapatan Lainnya.
+- Pengeluaran tunai dicatat dengan Rekening Uang Tunai; saldo Uang Tunai dikonfirmasi Sena.
+
+## 6. Kategori per merchant (aturan Format Keren yang dipetakan ke CAINI)
+- **Makan:** restoran/warung/kafe = Daily Food; makan di luar saat Sabtu/Minggu atau jalan-jalan = Weekend (pola CAINI sama).
+  Jajanan kecil (es, snack, minuman) = Jajan (CAINI punya kategori ini; Format Keren tidak). Hal yang di Format Keren
+  masuk Pemborosan (Mixue, Steam): (?) Jajan atau Self Reward?
+- **Toko tidak jelas** (Indomaret, Alfamart, toko kelontong, apotek, MR DIY) = Household. Belanja bahan makanan:
+  Daily Food atau Household sesuai pola (indomaret/grandlucky di CAINI pernah dicatat Daily Food). (?) konfirmasi.
+- **Transport:** Gojek/Gocar (nama lokasi di mutasi GoPay), MRT, KRL, Transjakarta ("tije"), Flazz, bensin, CityTrans.
+- **Wifi:** tagihan wifi. Uang wifi dari orang lain = Pendapatan **Iuran Wifi** (CAINI punya kategori khusus, bukan Lainnya).
+- **Persembahan / Perpuluhan / Sedekah:** sesuai nama. **Iuran Pemuda:** iuran komunitas pemuda gereja.
+- **Digital:** langganan (Google One, Netflix, Spotify), belanja online, **biaya transfer** (mis. "biaya adm tf").
+- **Darurat:** talangan, denda, service, GoSend, biaya mendadak.
+- **Vtuber:** pengeluaran terkait kegiatan Vtuber (top up koin, Trakteer, komisi art).
+- **SG26:** pengeluaran proyek/acara SG26. (?) konfirmasi artinya.
+- **Gaji Worker:** bayar SPG/worker. Pasangannya di Pendapatan **Gaji Worker** (uang dari klien untuk worker): dua-duanya dicatat.
+- **Asuransi, BPJS, Pajak, Gigi, Keluarga, Self Reward:** sesuai nama.
+
+## 7. Pendapatan
+- **Gaji:** gaji tetap dan fee kerja (Koukie Olivetree, Bareness, Orenji, Burgundy, Pagar Ayu). CAINI tidak punya kategori
+  Freelance, jadi fee freelance juga masuk Gaji.
+- **Gaji Worker:** uang dari klien untuk dibayarkan ke worker (termasuk pencairan SGD di OCBC untuk Penpen).
+- **Vtuber:** hasil Vtuber (Sociabuzz, TikTok).
+- **Iuran Wifi:** iuran wifi dari orang lain. **Hadiah:** angpao, kado. **Bunga Tabungan:** bunga bank.
+- **Lainnya:** patungan (Spotify/Netflix), ganti uang makan, reimburse, refund, uang lewat/numpang bayar.
+- **Uang lewat** (masuk lalu diteruskan): catat dua-duanya. Pemasukan yang tidak jelas pengirimnya: **tanya Sena dulu**,
+  jangan ditulis "Gatau ini apaan".
+- **Refund:** pembelian tetap dicatat; pengembaliannya = Pendapatan Lainnya ("Pengembalian Dana - ...").
+- Uang dari orang lain untuk wifi/masak bukan Piutang.
+
+## 8. Ritme dan rekonsiliasi
+- Ritme yang diusulkan (sama dengan Format Keren): kirim screenshot transaksi harian; saldo semua rekening seminggu sekali;
+  PDF mutasi bulan lalu di awal bulan.
+- Alur: catat batch → urutkan → baca saldo di Pindah Kas → cocokkan dengan saldo dari Sena → tanya yang tidak jelas
+  → catat aturan baru di `catatan-berjalan.md`.
+- Pertanyaan ke Sena dibuat berkelompok, lengkap dengan rekening + tanggal + nominal. Baris yang belum jelas ditahan.
+
+## 9. Batasan
+- Hanya sheet KEUNGAN CAINI. Tidak transfer, bayar, atau mengirim apa pun.
+- Nomor rekening, saldo, dan mutasi mentah tidak disimpan di repo (paling banyak 4 digit terakhir kalau Sena mengizinkan).

@@ -2,6 +2,10 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-02**: Sena menegaskan Menahem **hanya** memegang sheet KEUNGAN CAINI. Logika pencatatan dari "Keuangan Format Keren"
+  dipakai sebagai dasar dan disesuaikan dengan rekening dan kategori CAINI (lihat `README.md`). Poin bertanda (?) masih
+  menunggu konfirmasi.
+
 - **2026-11-02**: Sena mengirim `panduan-logika-pencatatan.md` (aturan dari kantor lama, ditulis untuk sheet "Keuangan Format Keren"
   `1QFqEIa2...`). Disimpan sebagai referensi. **Belum jelas** apakah aturan itu juga berlaku untuk sheet KEUNGAN CAINI
   (rekening dan kategorinya berbeda). Menunggu jawaban Sena.

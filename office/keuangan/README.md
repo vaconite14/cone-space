@@ -102,6 +102,25 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
   → catat aturan baru di `catatan-berjalan.md`.
 - Pertanyaan ke Sena dibuat berkelompok, lengkap dengan rekening + tanggal + nominal. Baris yang belum jelas ditahan.
 
+## 10. Utang, Piutang, Investasi, dan pembayaran gabungan (dipelajari dari data Januari)
+- **Transfer dari/ke orang lain** sering masuk `Catat - Piutang` atau `Catat - Utang`, bukan Pendapatan/Pengeluaran.
+  Selalu cek kedua tab itu dulu sebelum mencatat transfer orang sebagai pemasukan/pengeluaran baru.
+- `Catat - Piutang`: tabel kiri F:I = **memberi piutang** (uang keluar: Tanggal, Peminjam, Rekening, Nominal);
+  tabel kanan K:N = **piutang dibayar** (uang masuk). Ringkasan sisa per peminjam di B:C.
+  - Uang yang ditalangi untuk **Olivetree & Koukie** (Lalamove, belanja Shopee, dll.) = piutang ke "Olivetree & Koukie".
+  - **Pettycash** dari Olivetree/Koukie = pembayaran piutang (tabel kanan), bukan pendapatan.
+  - Patungan acara (mis. "Kokas Gabungan"): bagian teman = piutang keluar, iuran yang masuk = piutang dibayar,
+    bagian Caini sendiri = Pengeluaran.
+- `Catat - Utang`: tabel kiri F:J = **bayar utang** (Tanggal, Rincian/pemberi, Rekening, Nominal, Biaya Bunga);
+  tabel kanan L:P = **terima pinjaman**. Pemberi utang yang dipakai: BCA Credit Card, Cicilan Ipad, Gigi,
+  Shopee Pay Later, HORA ASIA.
+- **Pembayaran gabungan (SPayLater, kartu kredit BCA)**: satu debit besar di mutasi dirinci jadi beberapa baris di
+  tanggal yang sama (pengeluaran per kategori, piutang, dan/atau bayar utang) yang **tidak muncul satu-satu di mutasi**.
+  Cara cek: jumlah baris rincian di tanggal itu = nominal debit. Contoh pola: bayar SPayLater = beberapa makan + kas
+  piutang + cicilan.
+- `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
+  rekening tujuan BCA. Bukan pendapatan.
+
 ## 9. Batasan
 - Hanya sheet KEUNGAN CAINI. Tidak transfer, bayar, atau mengirim apa pun.
 - Nomor rekening, saldo, dan mutasi mentah tidak disimpan di repo (paling banyak 4 digit terakhir kalau Sena mengizinkan).

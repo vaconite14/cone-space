@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cone Space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ee; --surface:#ffffff; --surface-2:#faf8f4; --ink:#1d1b18; --muted:#6b665e; --line:#e7e1d7;
+  --floor:#efe9df; --floor-line:#e4dccf;
+  --manager:#7c5cff; --riset:#0ea5a4; --script:#f0623c; --planner:#d99a0b; --brand:#2f7de1; --video:#db2777; --analis:#7c3aed; --keuangan:#16a34a;
+  --ok:#1f9d55; --shadow:0 1px 2px rgba(29,27,24,.06),0 4px 16px rgba(29,27,24,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15140f; --surface:#1f1d18; --surface-2:#25231d; --ink:#f3efe7; --muted:#a8a194; --line:#34312a;
+  --floor:#1b1915; --floor-line:#262420; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  --bg:#15140f; --surface:#1f1d18; --surface-2:#25231d; --ink:#f3efe7; --muted:#a8a194; --line:#34312a;
+  --floor:#1b1915; --floor-line:#262420; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Plus Jakarta Sans",system-ui,sans-serif}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 16px 48px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:20px}
+h1{font-size:28px;margin:0;letter-spacing:-.02em}
+h2{font-size:16px;margin:0 0 12px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Lantai kantor */
+.floor{background:var(--floor);background-image:linear-gradient(var(--floor-line) 1px,transparent 1px),linear-gradient(90deg,var(--floor-line) 1px,transparent 1px);
+  background-size:32px 32px;border:1px solid var(--line);border-radius:20px;padding:20px;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.desk{background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow);border-top:4px solid var(--c);position:relative;cursor:pointer;transition:transform .15s}
+.desk:hover{transform:translateY(-2px)}
+.desk.active{outline:2px solid var(--c);outline-offset:2px}
+.avatar{width:48px;height:48px;border-radius:14px;background:color-mix(in srgb,var(--c) 18%,transparent);display:grid;place-items:center;font-size:24px;margin-bottom:10px;position:relative}
+.dot{position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;border:2px solid var(--surface);background:var(--muted)}
+.desk.busy .dot{background:var(--ok);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}50%{box-shadow:0 0 0 6px transparent}}
+.name{font-weight:700}
+.role{font-size:12px;color:var(--muted);margin-bottom:10px}
+.doing{font-size:13px;background:var(--surface-2);border-radius:10px;padding:8px 10px;min-height:52px}
+.doing b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--c);margin-bottom:2px}
+.count{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* Grid bawah */
+.grid{display:grid;grid-template-columns:1fr 340px;gap:20px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.board{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.board{grid-template-columns:1fr}}
+.col{background:var(--surface-2);border-radius:12px;padding:10px;min-height:120px}
+.col h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:2px 4px 10px;display:flex;justify-content:space-between}
+.card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:10px;margin-bottom:8px;font-size:13px}
+.card .t{font-weight:600;margin-bottom:6px;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:4px 8px;color:var(--muted);font-size:11.5px}
+.tag{background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);border-radius:6px;padding:1px 6px;font-weight:600}
+.card a{color:var(--c);font-weight:600;font-size:12px;text-decoration:none;display:inline-block;margin-top:6px;overflow-wrap:anywhere}
+.card a:hover{text-decoration:underline}
+.empty{color:var(--muted);font-size:12px;text-align:center;padding:16px 4px}
+.log{list-style:none;margin:0;padding:0;max-height:360px;overflow:auto}
+.log li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.log li:last-child{border:0}
+.log .e{font-size:18px;line-height:1.2}
+.log time{display:block;color:var(--muted);font-size:11px}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+textarea,select,input{width:100%;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:9px 10px;font:inherit;font-size:14px}
+textarea{min-height:90px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.out{margin-top:12px;background:var(--surface-2);border-radius:10px;padding:10px;font-size:13px;white-space:pre-wrap;display:none}
+.toast{color:var(--ok);font-size:12px;font-weight:600;margin-left:8px}
+.stack{display:grid;gap:20px;align-content:start}
+.filter{font-size:12px;color:var(--muted);margin-bottom:10px}
+.filter button{border:0;background:none;color:var(--ink);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>🏢 Cone Space</h1>
+      <div class="sub" id="updated">Memuat data…</div>
+    </div>
+    <div>
+      <button class="btn" onclick="location.reload()">↻ Refresh</button>
+    </div>
+  </header>
+
+  <section class="floor" id="floor" aria-label="Meja agen"></section>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Papan tugas</h2>
+      <div class="filter" id="filter"></div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <div class="stack">
+      <section class="panel">
+        <h2>✍️ Brief baru untuk Sena</h2>
+        <label for="b-what">Apa yang kamu butuhkan?</label>
+        <textarea id="b-what" placeholder="Contoh: Riset 5 ide untuk minggu depan, lalu bikinin naskah buat yang paling kuat."></textarea>
+        <div class="row">
+          <div>
+            <label for="b-plat">Platform</label>
+            <select id="b-plat"><option>Semua</option><option>TikTok / Reels / Shorts</option><option>YouTube panjang</option><option>Instagram carousel</option><option>X / Threads / blog</option></select>
+          </div>
+          <div>
+            <label for="b-dl">Deadline</label>
+            <input id="b-dl" type="date">
+          </div>
+        </div>
+        <label for="b-to">Langsung ke</label>
+        <select id="b-to"><option value="">Biar Maya yang atur</option></select>
+        <div style="margin-top:12px;display:flex;align-items:center">
+          <button class="btn primary" id="b-copy">Salin brief</button><span class="toast" id="b-toast"></span>
+        </div>
+        <div class="out" id="b-out"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Aktivitas kantor</h2>
+        <ul class="log" id="log"></ul>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="data/tasks.js"></script>
+<script>
+const AGENTS = {
+  manager:{name:"Sena",role:"Manager",emoji:"👓",color:"var(--manager)"},
+  riset:{name:"Salomo",role:"Riset Tren & Ide",emoji:"🔎",color:"var(--riset)"},
+  script:{name:"Daud",role:"Scriptwriter & Caption",emoji:"✍️",color:"var(--script)"},
+  planner:{name:"Saul",role:"Planner & Strategi",emoji:"📅",color:"var(--planner)"},
+  brand:{name:"Yerobeam",role:"Email Marketing & Brand",emoji:"✉️",color:"var(--brand)"},
+  video:{name:"Yehu",role:"Video Editor",emoji:"🎬",color:"var(--video)"},
+  analis:{name:"Omri",role:"Analis Data",emoji:"📊",color:"var(--analis)"},
+  keuangan:{name:"Menahem",role:"Keuangan",emoji:"💰",color:"var(--keuangan)"}
+};
+const COLS = [["antri","Antri"],["dikerjakan","Dikerjakan"],["review","Perlu kamu cek"],["selesai","Selesai"]];
+const data = window.OFFICE_DATA || {tasks:[],log:[]};
+const tasks = data.tasks || [];
+let filterAgent = null;
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ag = k => AGENTS[k] || AGENTS.manager;
+
+document.getElementById("updated").textContent = window.OFFICE_DATA
+  ? `Terakhir diperbarui ${data.updated || "-"} · ${tasks.filter(t=>t.status!=="selesai").length} tugas aktif`
+  : "data/tasks.js tidak ditemukan — pastikan file ini dibuka dari folder office/";
+
+function renderFloor(){
+  document.getElementById("floor").innerHTML = Object.entries(AGENTS).map(([k,a])=>{
+    const mine = tasks.filter(t=>t.agent===k);
+    const now = mine.find(t=>t.status==="dikerjakan");
+    const open = mine.filter(t=>t.status!=="selesai").length;
+    return `<div class="desk ${now?"busy":""} ${filterAgent===k?"active":""}" style="--c:${a.color}" data-k="${k}" role="button" tabindex="0" aria-label="Filter tugas ${a.name}">
+      <div class="avatar">${a.emoji}<span class="dot"></span></div>
+      <div class="name">${a.name}</div><div class="role">${a.role}</div>
+      <div class="doing"><b>${now?"Sedang mengerjakan":"Status"}</b>${now?esc(now.title):"Santai, menunggu brief ☕"}</div>
+      <div class="count">${open} tugas terbuka · ${mine.length-open} selesai</div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".desk").forEach(d=>{
+    const go=()=>{filterAgent = filterAgent===d.dataset.k ? null : d.dataset.k; render();};
+    d.onclick=go; d.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}};
+  });
+}
+
+function renderBoard(){
+  const list = filterAgent ? tasks.filter(t=>t.agent===filterAgent) : tasks;
+  document.getElementById("filter").innerHTML = filterAgent
+    ? `Menampilkan tugas ${ag(filterAgent).name} · <button id="clr">tampilkan semua</button>`
+    : "Klik meja agen untuk memfilter tugasnya.";
+  const clr=document.getElementById("clr"); if(clr) clr.onclick=()=>{filterAgent=null;render();};
+  document.getElementById("board").innerHTML = COLS.map(([s,label])=>{
+    const items = list.filter(t=>t.status===s);
+    return `<div class="col"><h3>${label}<span>${items.length}</span></h3>${
+      items.length ? items.map(t=>{const a=ag(t.agent);return `<div class="card" style="--c:${a.color}">
+        <div class="t">${esc(t.title)}</div>
+        <div class="meta"><span class="tag">${a.emoji} ${a.name}</span>${t.platform?`<span>${esc(t.platform)}</span>`:""}${t.deadline?`<span>⏰ ${esc(t.deadline)}</span>`:""}</div>
+        ${t.notes?`<div class="meta" style="margin-top:4px">${esc(t.notes)}</div>`:""}
+        ${t.output?`<a href="${esc(t.output)}" target="_blank" rel="noopener">📄 ${esc(t.output.split("/").pop())}</a>`:""}
+      </div>`}).join("") : `<div class="empty">Kosong</div>`
+    }</div>`;
+  }).join("");
+}
+
+function renderLog(){
+  const items = (data.log||[]).slice(0,50);
+  document.getElementById("log").innerHTML = items.length ? items.map(l=>{const a=ag(l.agent);
+    return `<li><span class="e">${a.emoji}</span><div><b>${a.name}</b> ${esc(l.text)}<time>${esc(l.time)}</time></div></li>`;}).join("")
+    : `<li class="empty">Belum ada aktivitas.</li>`;
+}
+
+function render(){renderFloor();renderBoard();renderLog();}
+render();
+
+// Brief composer: menyusun teks untuk ditempel ke Claude
+const sel=document.getElementById("b-to");
+Object.entries(AGENTS).filter(([k])=>k!=="manager").forEach(([k,a])=>sel.insertAdjacentHTML("beforeend",`<option value="${k}">${a.name} – ${a.role}</option>`));
+document.getElementById("b-copy").onclick=async()=>{
+  const what=document.getElementById("b-what").value.trim();
+  const toast=document.getElementById("b-toast"), out=document.getElementById("b-out");
+  if(!what){toast.style.color="var(--script)";toast.textContent="Isi dulu kebutuhannya";return;}
+  const plat=document.getElementById("b-plat").value, dl=document.getElementById("b-dl").value, to=sel.value;
+  const text=`Maya, ada brief baru:\n${what}\n\nPlatform: ${plat}${dl?`\nDeadline: ${dl}`:""}${to?`\nTolong serahkan ke ${AGENTS[to].name} (${AGENTS[to].role}).`:""}\n\nCatat di papan tugas dan kabari aku kalau sudah ada hasil.`;
+  out.style.display="block"; out.textContent=text;
+  try{await navigator.clipboard.writeText(text);toast.style.color="var(--ok)";toast.textContent="Tersalin! Tempel ke chat Claude.";}
+  catch(e){toast.style.color="var(--muted)";toast.textContent="Salin manual dari kotak di bawah.";}
+};
+</script>
+</body>
+</html>

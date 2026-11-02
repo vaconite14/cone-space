@@ -1,0 +1,31 @@
+# Dependencies and builds: every device installs/builds its own (Setup-Kantor.ps1)
+node_modules/
+claude-office/dist/
+claude-office/release/
+claude-office/docs/images/
+
+# Renders and caches (large, regenerated from code)
+out/
+render/
+**/out/
+**/render/
+*.mp4.tmp
+
+# Video output stays internal to each device: never pushed (Val's rule)
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.m4v
+
+# Per-device state
+.sena-session.json
+.sena-bridge.pid
+.claude/settings.local.json
+*.log
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+.DS_Store
+.sena-bridge.log

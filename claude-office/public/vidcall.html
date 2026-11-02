@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapat Tim Cone Space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #15131c; --panel: #201d2a; --tile: #2a2636; --ink: #f4efe6; --muted: #a59fb5; --line: #3a3549;
+  --talk: #5ce08a; --warn: #ffcc4d; --red: #ff5a5f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: 'Pixelify Sans', system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
+header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 2px solid var(--line); }
+header h1 { font-size: 20px; margin: 0; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
+.rec { width: 10px; height: 10px; background: var(--red); flex: none; }
+.timer, .count { color: var(--muted); font-size: 15px; white-space: nowrap; }
+@media (max-width: 600px) { .count { display: none; } header h1 { font-size: 17px; } }
+.spacer { flex: 1; }
+.offline { display: none; background: #3b1f26; color: #ffb3b6; border: 2px solid #6b2a35; padding: 4px 10px; font-size: 14px; }
+.offline.on { display: block; }
+.notes-btn { background: var(--tile); border: 2px solid var(--line); color: var(--ink); font: inherit; font-size: 14px; padding: 4px 10px; cursor: pointer; }
+.notes-btn:hover { border-color: var(--muted); }
+.notes-btn.on { background: #3a3550; border-color: #8b80ff; }
+main { flex: 1; display: flex; min-height: 0; }
+/* fitStage() picks the column count and tile width that fill the stage without scrolling or overlap */
+.stage { flex: 1; min-width: 0; min-height: 0; padding: 16px; display: grid; gap: var(--gap, 14px);
+  grid-template-columns: repeat(var(--cols, 3), var(--tw, 240px)); justify-content: center; align-content: center; overflow: auto; }
+.tile { position: relative; background: var(--tile); width: var(--tw, 240px); aspect-ratio: 4 / 3; border: 3px solid var(--line); overflow: hidden;
+  container-type: inline-size; transition: border-color .2s, box-shadow .2s; }
+.tile canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+.tile.talking { border-color: var(--talk); box-shadow: 0 0 0 3px #5ce08a33, 0 0 22px #5ce08a44; }
+.tile.needs { border-color: var(--warn); box-shadow: 0 0 0 3px #ffcc4d33; }
+.tile.idle canvas { filter: saturate(.8) brightness(.85); }
+.name { position: absolute; left: 3cqw; bottom: 3cqw; max-width: 94cqw; display: flex; align-items: center; gap: 6px; background: #000000aa; padding: 4px 8px;
+  font-size: clamp(10px, 5.6cqw, 15px); font-weight: 600; white-space: nowrap; overflow: hidden; }
+.dot { width: 8px; height: 8px; background: var(--muted); }
+.tile.talking .dot { background: var(--talk); }
+.tile.needs .dot { background: var(--warn); }
+.role { color: var(--muted); font-weight: 400; font-size: clamp(9px, 4.8cqw, 13px); overflow: hidden; text-overflow: ellipsis; }
+.chip { position: absolute; left: 3cqw; top: 3cqw; max-width: 60cqw; background: #000000aa; padding: 3px 8px; font-size: clamp(9px, 4.8cqw, 13px); color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile.talking .chip, .tile.needs .chip { display: none; }
+/* the speech bubble next to the head: pixel border, a stepped tail pointing at the face */
+.bubble { position: absolute; left: 67%; top: 9%; width: 31%; max-height: 62%; overflow: hidden;
+  background: #fffdf6; color: #1a1420; font-size: clamp(8px, 4.6cqw, 13px); line-height: 1.25; padding: 2cqw 2.5cqw;
+  box-shadow: 0 -3px 0 0 #1a1420, 0 3px 0 0 #1a1420, -3px 0 0 0 #1a1420, 3px 0 0 0 #1a1420; opacity: 0; transform: translateY(6px) scale(.9); transform-origin: 0 100%;
+  transition: opacity .15s steps(3), transform .15s steps(3); pointer-events: none; overflow-wrap: anywhere; }
+.bubble.on { opacity: 1; transform: none; }
+.bubble::before, .bubble::after { content: ''; position: absolute; background: #fffdf6; box-shadow: 0 3px 0 0 #1a1420, -3px 0 0 0 #1a1420; }
+.bubble::before { left: -9px; bottom: 6px; width: 9px; height: 6px; }
+.bubble::after { left: -15px; bottom: 3px; width: 6px; height: 3px; }
+.bubble .who { font-weight: 700; font-size: clamp(8px, 3.8cqw, 11px); color: #7a6f8a; display: block; }
+.hand { font-size: clamp(14px, 8cqw, 22px); }
+/* small tiles: drop the extras so the name and bubble still fit */
+@container (max-width: 200px) {
+  .role, .bubble .who { display: none; }
+  .bubble { left: 64%; width: 34%; }
+}
+.caret { display: inline-block; width: 6px; height: 11px; background: #1a1420; margin-left: 2px; vertical-align: -1px; animation: blink 0.8s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hand { position: absolute; right: 10px; bottom: 8px; font-size: 22px; display: none; }
+.tile.needs .hand { display: block; animation: wave 0.8s steps(2) infinite; }
+@keyframes wave { 50% { transform: rotate(-18deg); } }
+aside { width: 300px; background: var(--panel); border-left: 2px solid var(--line); display: flex; flex-direction: column; }
+aside.hidden { display: none; }
+aside h2 { font-size: 16px; margin: 0; padding: 12px 14px; border-bottom: 2px solid var(--line); }
+aside { width: 340px; }
+.log { flex: 1; overflow: auto; padding: 10px 12px; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.log li { font-size: 14px; line-height: 1.35; max-width: 88%; padding: 7px 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.log li.val { align-self: flex-end; background: #3a3550; box-shadow: 0 0 0 2px #8b80ff; }
+.log li.sena, .log li.agent { align-self: flex-start; background: #fffdf6; color: #1a1420; box-shadow: 0 0 0 2px #1a1420; }
+.log li.sys { align-self: center; max-width: 100%; padding: 0; color: var(--muted); font-size: 12px; text-align: center; }
+.log li .who { display: block; font-size: 11px; font-weight: 700; opacity: .7; margin-bottom: 2px; }
+.log li time { font-size: 11px; opacity: .6; margin-left: 6px; }
+.log .empty { color: var(--muted); align-self: center; }
+.typing { color: var(--muted); font-size: 13px; padding: 0 14px 6px; min-height: 19px; }
+.compose { display: flex; gap: 8px; padding: 10px 12px; border-top: 2px solid var(--line); }
+.compose textarea { flex: 1; resize: none; height: 54px; background: var(--tile); color: var(--ink); border: 2px solid var(--line); font: inherit; font-size: 14px; padding: 6px 8px; }
+.compose textarea:focus { outline: none; border-color: #8b80ff; }
+.compose button { background: #8b80ff; color: #15131c; border: 0; font: inherit; font-weight: 700; padding: 0 14px; cursor: pointer; }
+.compose button:disabled { opacity: .5; cursor: default; }
+header h1 { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* narrow windows: the chat goes under the faces instead of covering them */
+@media (max-width: 760px) {
+  main { flex-direction: column; }
+  aside { width: auto; height: 45%; border-left: 0; border-top: 2px solid var(--line); }
+  .stage { padding: 10px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="rec" aria-hidden="true"></div>
+  <h1>Rapat Tim Cone Space</h1>
+  <span class="timer" id="timer">00:00</span>
+  <span class="spacer"></span>
+  <span class="offline" id="offline">Server kantor belum nyala</span>
+  <span class="count" id="count"></span>
+  <button class="notes-btn on" id="chatBtn" aria-pressed="true">Chat</button>
+</header>
+<main>
+  <section class="stage" id="stage" aria-label="Peserta rapat"></section>
+  <aside id="side">
+    <h2>Chat tim</h2>
+    <ul class="log" id="log" aria-live="polite"><li class="empty">Ngobrol sama tim di bawah. Panggil nama kalau mau ke satu orang.</li></ul>
+    <div class="typing" id="typing"></div>
+    <form class="compose" id="compose">
+      <textarea id="msg" placeholder="Ngobrol sama tim… panggil nama kalau mau ke satu orang (Enter kirim, Shift+Enter baris baru)" aria-label="Pesan untuk tim"></textarea>
+      <button id="send">Kirim</button>
+    </form>
+  </aside>
+</main>
+<script>
+// ---------- the team ----------
+// `id` matches the agent's subagent type (or 'sena' for the main Claude session, 'bos' for you).
+const TEAM = [
+  { id: 'bos', name: 'Val', role: 'Bos', look: 'val', bg: '#14204a' },
+  { id: 'sena', name: 'Sena', role: 'Manager', look: 'sena', bg: '#29282f' },
+  { id: 'riset-tren', name: 'Salomo', role: 'Riset', look: 'ene', bg: '#0f2a44' },
+  { id: 'scriptwriter', name: 'Daud', role: 'Script', look: 'light', bg: '#1c1a20' },
+  { id: 'planner', name: 'Saul', role: 'Planner', look: 'lelouch', bg: '#2a1a3d' },
+  { id: 'brand-manager', name: 'Yerobeam', role: 'Email & Brand', look: 'miku', bg: '#123a3a' },
+  { id: 'video-editor', name: 'Yehu', role: 'Video', look: 'lucy', bg: '#140f24' },
+  { id: 'analis-data', name: 'Omri', role: 'Analis Data', look: 'ai', bg: '#33193a' },
+  { id: 'keuangan', name: 'Menahem', role: 'Keuangan', look: 'fern', bg: '#1f1a33' },
+];
+const K = '#1a1420', WH = '#ffffff', BLUSH = '#ff8fa3';
+
+// ---------- pixel-art busts: 40x30 cells on a 4:3 tile, drawn from rectangles so they can blink and talk ----------
+function drawAvatar(ctx, a, t, st) {
+  const S = ctx.canvas.width / 40;
+  const bob = st.talking ? Math.round(Math.abs(Math.sin(t * 6))) : 0;
+  const R = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(x * S, (y + bob) * S, w * S + 0.5, h * S + 0.5); };
+  const F = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(x * S, y * S, w * S + 0.5, h * S + 0.5); }; // fixed to the room, no bob
+  const L = LOOKS[a.look];
+  ctx.fillStyle = a.bg; ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  L.room && L.room(F, t);
+  const blink = st.sleepy || ((t + a.name.length * 0.7) % 4.2) < 0.13;
+  const open = st.talking && Math.sin(t * 14 + a.name.length) > 0;
+  const P = { R, t, blink, open, st };
+  L.back && L.back(P);
+  // shoulders
+  R(9, 24, 22, 7, K); R(10, 25, 20, 6, L.shirt); R(11, 25, 6, 2, L.shirtHi);
+  R(17, 22, 6, 4, K); R(18, 22, 4, 4, L.skin);
+  L.clothes && L.clothes(P);
+  // head
+  R(13, 7, 14, 16, K); R(14, 8, 12, 14, L.skin); R(14, 20, 12, 2, '#00000014');
+  // eyes
+  if (L.eyes) L.eyes(P);
+  else if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); }
+  else for (const ex of [15, 22]) { R(ex, 13, 3, 4, K); R(ex, 14, 3, 3, L.eye); R(ex, 14, 1, 1, WH); R(ex + 2, 16, 1, 1, '#ffffff99'); }
+  if (st.sleepy) { R(15, 14, 3, 1, L.skin); R(22, 14, 3, 1, L.skin); }
+  R(15, 17, 2, 1, BLUSH); R(23, 17, 2, 1, BLUSH);
+  // mouth
+  if (L.mouth) L.mouth(P);
+  else if (open) { R(19, 19, 3, 2, K); R(20, 20, 1, 1, '#7a2e3a'); }
+  else if (st.needs) R(19, 19, 2, 2, K);
+  else R(19, 19, 3, 1, K);
+  L.front(P);
+  L.extra && L.extra(P);
+  if (st.sleepy) { const z = Math.floor(t * 2) % 3; for (let i = 0; i <= z; i++) { const x = 30 + i * 2, y = 6 - i * 2; F(x, y, 2, 0.5, '#ffffffaa'); F(x + 1.5, y, 0.5, 1.5, '#ffffffaa'); F(x, y + 1.5, 2, 0.5, '#ffffffaa'); } }
+}
+
+const LOOKS = {
+  // Yehu (look 'lucy'): silver-white bob with pink and cyan tips, blunt bangs, grey-blue eyes with red liner,
+  // black high-collar jacket, a neural port on the neck, a neon city and a small moon behind her
+  lucy: {
+    skin: '#f7e4dd', shirt: '#1b1b24', shirtHi: '#2c2c3a',
+    room: (F, t) => {
+      for (const [x, w, h] of [[0, 4, 12], [4, 3, 17], [7, 4, 9], [30, 3, 15], [33, 4, 11], [37, 3, 18]]) {
+        F(x, 30 - h, w, h, '#1f1838');
+        for (let y = 31 - h; y < 29; y += 2) F(x + 1, y, 1, 0.5, (x + y) % 3 ? '#ff4fd855' : '#4ff0ff66');
+      }
+      for (let dy = -2; dy <= 2; dy++) { const w = Math.sqrt(6.5 - dy * dy); F(33 - w, 5 + dy, 2 * w, 1, '#f2e6c9'); }
+      F(0, 28.5, 40, 0.3, `rgba(255,79,216,${0.3 + 0.2 * Math.sin(t * 3)})`);
+    },
+    back: ({ R }) => { R(11, 7, 18, 15, K); R(12, 8, 16, 14, '#e9eef6'); R(12, 18, 16, 4, '#dfe6f2'); },
+    clothes: ({ R }) => {
+      R(16, 22, 8, 3, K); R(17, 22, 6, 3, '#e9e9f2'); // high white collar
+      R(18, 22.5, 1, 1, '#4ff0ff'); // neural port
+      R(11, 26, 1, 5, '#4ff0ff'); R(28, 26, 1, 5, '#ff4fd8'); R(15, 25, 1, 6, '#2c2c3a'); R(24, 25, 1, 6, '#2c2c3a');
+    },
+    eyes: ({ R, blink }) => {
+      if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); }
+      else for (const ex of [15, 22]) { R(ex, 13, 3, 4, K); R(ex, 14, 3, 3, '#7f8fb8'); R(ex, 14, 1, 1, WH); R(ex + 2, 16, 1, 1, '#ffffff88'); }
+      R(14.5, 16.5, 0.5, 1, '#e0284f'); R(25, 16.5, 0.5, 1, '#e0284f'); // red liner wings
+    },
+    front: ({ R }) => {
+      const H = '#e9eef6';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 5, H); R(15, 6, 5, 1, WH);
+      R(14, 11, 2, 1, H); R(17, 11, 3, 1, H); R(21, 11, 2, 1, H); R(24, 11, 2, 1, H); // blunt bangs
+      R(12.5, 9, 1.5, 13, H); R(26, 9, 1.5, 13, H); // side locks to the jaw
+      R(12, 18, 2, 4, '#ff7ad9'); R(26, 18, 2, 4, '#7ff0ff'); R(12.5, 17, 1.5, 1, '#f7b8e8'); R(26, 17, 1.5, 1, '#b8f7ff'); // pastel tips
+    },
+  },
+  // Val (you): messy black hair with a white streak, orange eyes, blue rectangular glasses,
+  // white shirt and black tie under a red-pink hood, in front of a full moon
+  val: {
+    skin: '#f3ddd2', eye: '#e8762a', shirt: '#d24a68', shirtHi: '#e8708a',
+    room: (F) => {
+      for (const [x, y] of [[3, 3], [7, 9], [5, 20], [34, 4], [37, 12], [32, 22], [11, 2], [29, 1]]) F(x, y, 0.5, 0.5, '#ffffffaa');
+      for (let dy = -10; dy <= 10; dy++) { const w = Math.sqrt(100 - dy * dy); F(20 - w, 13 + dy, 2 * w, 1, '#c9ccd8'); } // the moon
+      F(12, 8, 2, 2, '#b3b7c6'); F(26, 6, 3, 2, '#b3b7c6'); F(27, 17, 2, 2, '#b3b7c6'); F(11, 17, 2, 1, '#b3b7c6');
+    },
+    back: ({ R }) => { R(12, 7, 16, 15, K); R(13, 8, 14, 14, '#1b1a24'); },
+    clothes: ({ R }) => {
+      R(16, 24, 3, 2, WH); R(21, 24, 3, 2, WH); R(19, 25, 2, 6, '#15131c'); R(19, 24, 2, 1, '#2a2833'); // collar + tie
+      R(9, 23, 7, 2, '#a8344f'); R(24, 23, 7, 2, '#a8344f'); R(10, 23, 4, 1, '#e8708a'); // the hood rolled round the shoulders
+    },
+    front: ({ R }) => {
+      const H = '#1b1a24', streak = '#efe3ea';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 4, H); R(15, 4, 2, 1, K); R(21, 4, 3, 1, K); R(16, 6, 4, 1, '#3a3a52');
+      R(14, 10, 3, 3, H); R(17, 10, 2, 4, H); R(20, 10, 3, 2, H); R(23, 10, 3, 3, H); // messy bangs
+      R(13, 9, 1, 11, H); R(26, 9, 1, 11, H); R(12, 12, 1, 7, H); R(27, 12, 1, 7, H); // sides past the jaw
+      R(24, 7, 2, 5, streak); R(26, 10, 1, 7, streak); R(25, 12, 1, 1, streak); // the white streak
+      for (const gx of [14.5, 21.5]) { R(gx, 12.5, 4, 0.5, '#3d6fe0'); R(gx, 17, 4, 0.5, '#3d6fe0'); R(gx, 12.5, 0.5, 5, '#3d6fe0'); R(gx + 3.5, 12.5, 0.5, 5, '#3d6fe0'); }
+      R(18.5, 14, 3, 0.5, '#3d6fe0');
+    },
+  },
+  // Sena: long black hair parted in the middle, round glasses, eyes closed in a soft smile,
+  // white frilled blouse with a black ribbon, little orange lantern earrings and pendant
+  sena: {
+    skin: '#fbe9e4', shirt: '#f4f1f6', shirtHi: '#ffffff',
+    room: (F) => { F(1, 1, 38, 28, '#ffffff06'); F(3, 2, 34, 0.5, '#ffffff22'); F(3, 2, 0.5, 26, '#ffffff22'); F(36.5, 2, 0.5, 26, '#ffffff22'); F(19, 2.5, 2, 1, '#ffe08a'); },
+    back: ({ R }) => { R(10, 6, 20, 25, K); R(11, 7, 18, 24, '#1c1b22'); R(12, 12, 1, 18, '#2c2f45'); R(27, 12, 1, 18, '#2c2f45'); R(14, 22, 1, 9, '#2c2f45'); R(25, 22, 1, 9, '#2c2f45'); },
+    clothes: ({ R }) => {
+      for (let x = 13; x < 27; x += 2) R(x, 24, 1, 1, '#d9d3e3'); // frilled collar
+      R(16, 24, 3, 1, WH); R(21, 24, 3, 1, WH);
+      R(18, 25, 4, 1, K); R(19, 26, 2, 1, K); R(18, 27, 1, 3, K); R(21, 27, 1, 3, K); // black ribbon
+      R(20, 27, 1, 1, '#d8a63a'); R(19, 28, 2, 2, '#e05a2b'); R(19, 28, 2, 1, '#d8a63a'); // lantern pendant
+      R(20, 30, 1, 1, K);
+    },
+    eyes: ({ R }) => { // closed, smiling: a soft downward curve with lashes
+      for (const ex of [15, 22]) { R(ex, 14, 1, 1, '#5a4a52'); R(ex + 1, 15, 2, 1, '#5a4a52'); R(ex + 3, 14, 1, 1, '#5a4a52'); }
+    },
+    mouth: ({ R, open }) => { if (open) { R(19, 19, 2, 2, '#b85a6a'); } else { R(18, 19, 1, 1, '#c07080'); R(19, 20, 2, 1, '#c07080'); R(21, 19, 1, 1, '#c07080'); } },
+    front: ({ R }) => {
+      R(13, 5, 14, 4, K); R(14, 6, 12, 3, '#1c1b22'); R(19, 6, 1, 3, '#3a3f5c'); // centre part
+      // bangs swept to both sides, leaving a V of forehead in the middle and the eyes clear
+      R(14, 9, 4, 1, '#1c1b22'); R(14, 10, 2, 1, '#1c1b22'); R(17, 9, 2, 0.5, '#1c1b22');
+      R(21, 9, 2, 0.5, '#1c1b22'); R(22, 9, 4, 1, '#1c1b22'); R(24, 10, 2, 1, '#1c1b22');
+      R(14, 11, 0.5, 8, '#1c1b22'); R(25.5, 11, 0.5, 8, '#1c1b22'); // thin strands framing the face
+      R(12, 9, 2, 14, '#1c1b22'); R(26, 9, 2, 14, '#1c1b22'); R(15, 7, 3, 1, '#3a3f5c'); R(22, 7, 3, 1, '#3a3f5c');
+      R(11, 4, 2, 1, '#1c1b22'); R(9, 5, 3, 1, '#1c1b22'); R(28, 5, 3, 1, '#1c1b22'); R(30, 6, 2, 1, '#1c1b22'); // stray strands
+      // round glasses
+      // round glasses, half-cell thin rims
+      for (const gx of [14.5, 21]) { R(gx + 1, 12.5, 2.5, 0.5, K); R(gx + 1, 17, 2.5, 0.5, K); R(gx + 0.5, 13, 0.5, 4, K); R(gx + 3.5, 13, 0.5, 4, K); R(gx + 1, 13, 0.5, 0.5, '#ffffff88'); }
+      R(19, 14, 2, 0.5, K);
+      // lantern earrings
+      R(13, 19, 1, 1, '#d8a63a'); R(13, 20, 1, 2, '#e05a2b'); R(26, 19, 1, 1, '#d8a63a'); R(26, 20, 1, 2, '#e05a2b');
+    },
+  },
+  // Salomo (look 'ene'): the cyber girl in the screen, blue twin tails and a blue track jacket
+  ene: {
+    skin: '#e6f3ff', eye: '#18b8e6', shirt: '#1f6fd1', shirtHi: '#3d8ff0',
+    room: (F, t) => { for (let i = 0; i < 40; i += 4) F(i, 0, 0.25, 30, '#22d3ee18'); for (let j = 0; j < 30; j += 4) F(0, j, 40, 0.25, '#22d3ee18'); F(2, (t * 6) % 30, 36, 0.4, '#22d3ee33'); },
+    back: ({ R, t }) => { const sw = Math.round(Math.sin(t * 2)); R(6 + sw, 11, 6, 16, K); R(7 + sw, 12, 4, 14, '#2fa8ff'); R(28 - sw, 11, 6, 16, K); R(29 - sw, 12, 4, 14, '#2fa8ff'); R(7 + sw, 12, 1, 10, '#8fdcff'); R(29 - sw, 12, 1, 10, '#8fdcff'); },
+    clothes: ({ R }) => { R(19, 25, 2, 6, WH); R(12, 26, 1, 5, WH); R(27, 26, 1, 5, WH); R(16, 24, 8, 1, '#1a4fa0'); },
+    mouth: ({ R, open, st }) => { if (open) { R(18, 19, 4, 2, K); R(19, 20, 2, 1, '#ff6b8a'); } else { R(18, 19, 1, 1, K); R(19, 20, 2, 1, K); R(21, 19, 1, 1, K); } },
+    front: ({ R }) => { R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#2fa8ff'); R(14, 10, 3, 3, '#2fa8ff'); R(18, 10, 2, 2, '#2fa8ff'); R(21, 10, 2, 3, '#2fa8ff'); R(24, 10, 2, 3, '#2fa8ff'); R(16, 6, 5, 1, '#8fdcff'); R(11, 10, 3, 3, '#ffd23f'); R(26, 10, 3, 3, '#ffd23f'); },
+  },
+  // Daud (look 'light'): neat chestnut hair, sharp amber eyes, a knowing smirk; navy blazer, maroon tie (and an apple nearby)
+  light: {
+    skin: '#f3d2b3', shirt: '#1f2a44', shirtHi: '#34466e',
+    room: (F) => { F(32, 21, 3, 3, '#c0262d'); F(33, 20, 1, 1, '#4a3020'); F(34, 19.5, 1.5, 0.8, '#3a8a3a'); F(32.5, 21.5, 0.8, 0.8, '#ff8a8a'); F(2, 3, 9, 8, '#ffffff08'); },
+    clothes: ({ R }) => { R(17, 24, 6, 4, WH); R(19, 25, 2, 6, '#7a1e2a'); R(19, 25, 2, 1, '#9a2a38'); },
+    eyes: ({ R, blink }) => { if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); return; } for (const ex of [15, 22]) { R(ex, 14, 3, 1, K); R(ex, 15, 3, 2, '#b5651d'); R(ex + 1, 15, 1, 1, WH); } },
+    mouth: ({ R, open }) => { if (open) { R(19, 19, 3, 2, K); R(20, 20, 1, 1, '#7a2e3a'); } else { R(19, 20, 2, 1, K); R(21, 19, 1, 1, K); } },
+    front: ({ R }) => { R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#a0643a'); R(14, 10, 3, 4, '#a0643a'); R(17, 10, 3, 2, '#a0643a'); R(21, 10, 2, 3, '#a0643a'); R(23, 10, 3, 4, '#a0643a'); R(13, 9, 1, 8, '#a0643a'); R(26, 9, 1, 8, '#a0643a'); R(16, 6, 6, 1, '#c98a52'); R(15, 12, 3, 1, '#7a4a28'); R(22, 12, 3, 1, '#7a4a28'); },
+  },
+  // Saul (look 'lelouch'): black hair, violet eyes (the left one glows red while he works), black uniform with gold trim
+  lelouch: {
+    skin: '#f6dcc6', shirt: '#17121f', shirtHi: '#2a2238',
+    room: (F) => { F(2, 3, 9, 8, '#ffffff08'); F(32, 4, 2, 2, '#c43b5a55'); F(31, 5, 4, 0.5, '#c43b5a55'); F(32.75, 3, 0.5, 4, '#c43b5a55'); },
+    clothes: ({ R }) => { R(16, 23, 8, 2, '#17121f'); R(16, 23, 8, 1, '#d4a43a'); R(19, 25, 2, 6, '#d4a43a'); R(12, 26, 4, 1, '#d4a43a'); R(24, 26, 4, 1, '#d4a43a'); },
+    eyes: ({ R, blink, st, t }) => {
+      if (blink) { R(15, 15, 3, 1, K); R(22, 15, 3, 1, K); return; }
+      const geass = st.talking && Math.sin(t * 2) > -0.3;
+      R(15, 13, 3, 4, K); R(15, 14, 3, 3, '#8a4fd8'); R(15, 14, 1, 1, WH);
+      R(22, 13, 3, 4, K); R(22, 14, 3, 3, geass ? '#e0284f' : '#8a4fd8'); R(22, 14, 1, 1, WH); if (geass) R(23, 15, 1, 1, '#ffb3c4');
+    },
+    mouth: ({ R, open }) => { if (open) { R(19, 19, 3, 2, K); R(20, 20, 1, 1, '#7a2e3a'); } else { R(19, 19, 3, 1, K); R(22, 18, 1, 1, K); } },
+    front: ({ R }) => { R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#15121c'); R(14, 10, 2, 5, '#15121c'); R(16, 10, 2, 3, '#15121c'); R(18, 10, 2, 4, '#15121c'); R(21, 10, 2, 3, '#15121c'); R(23, 10, 3, 5, '#15121c'); R(13, 9, 1, 9, '#15121c'); R(26, 9, 1, 9, '#15121c'); R(16, 6, 4, 1, '#3b2f52'); R(12, 4, 2, 2, '#15121c'); R(26, 4, 2, 2, '#15121c'); },
+  },
+  // Yerobeam (look 'miku'): long teal twin tails with dark hair ties, teal eyes, grey top with a teal tie, a headset mic
+  miku: {
+    skin: '#fbe3d6', eye: '#1fb5ac', shirt: '#9aa3ab', shirtHi: '#b8c0c7',
+    room: (F, t) => { for (let i = 0; i < 6; i++) { const h = 2 + Math.abs(Math.sin(t * 3 + i)) * 4; F(2 + i * 1.4, 26 - h, 1, h, '#39c5bb44'); } F(31, 3, 7, 1, '#39c5bb33'); },
+    back: ({ R, t }) => { const sw = Math.round(Math.sin(t * 2.2)); R(5 + sw, 6, 7, 25, K); R(6 + sw, 7, 5, 24, '#39c5bb'); R(28 - sw, 6, 7, 25, K); R(29 - sw, 7, 5, 24, '#39c5bb'); R(6 + sw, 7, 1, 20, '#8ff0e8'); R(29 - sw, 7, 1, 20, '#8ff0e8'); },
+    clothes: ({ R }) => { R(17, 24, 6, 2, '#5f6870'); R(19, 25, 2, 6, '#39c5bb'); R(10, 25, 2, 6, '#fbe3d6'); R(28, 25, 2, 6, '#fbe3d6'); },
+    front: ({ R }) => {
+      R(13, 5, 14, 5, K); R(14, 6, 12, 4, '#39c5bb'); R(14, 10, 3, 3, '#39c5bb'); R(17, 10, 2, 2, '#39c5bb'); R(20, 10, 2, 2, '#39c5bb'); R(22, 10, 4, 3, '#39c5bb'); R(16, 6, 5, 1, '#8ff0e8');
+      R(11, 5, 3, 3, '#2a2a33'); R(26, 5, 3, 3, '#2a2a33'); R(12, 6, 1, 1, '#ff4fa0'); R(27, 6, 1, 1, '#ff4fa0'); // hair ties
+      R(26, 14, 1, 5, '#5f6870'); R(24, 19, 3, 1, '#5f6870'); R(23, 19, 1, 1, K); // headset mic
+    },
+  },
+  // Omri (look 'ai'): long brown hair with pink streaks, a big pink ribbon, sky-blue eyes, white sailor top with pink trim,
+  // a live chart and floating hearts behind her (she reads the live-stream numbers)
+  ai: {
+    skin: '#fde7dc', eye: '#4aa8f0', shirt: '#f3f1f6', shirtHi: '#ffffff',
+    room: (F, t) => {
+      F(29, 6, 9, 7, '#ffffff10'); F(29, 12.5, 9, 0.5, '#ffffff33'); // a little chart panel
+      [2, 4, 3, 5, 6].forEach((h, i) => F(30 + i * 1.6, 12.5 - h, 1, h, i === 4 ? '#ff6fae' : '#8fd3ff88'));
+      for (let i = 0; i < 4; i++) {
+        const y = 27 - ((t * 3 + i * 6) % 24), x = 2 + i * 2.2 + Math.sin(t * 2 + i) * 0.8;
+        F(x, y, 0.5, 0.5, '#ff8fc4aa'); F(x + 1, y, 0.5, 0.5, '#ff8fc4aa'); F(x, y + 0.5, 1.5, 0.5, '#ff8fc4aa'); F(x + 0.5, y + 1, 0.5, 0.5, '#ff8fc4aa');
+      }
+    },
+    back: ({ R }) => { R(11, 7, 18, 24, K); R(12, 8, 16, 23, '#7a4b33'); R(12, 25, 2, 6, '#ff8fc4'); R(26, 25, 2, 6, '#ff8fc4'); },
+    clothes: ({ R }) => {
+      R(14, 24, 12, 2, '#ff8fc4'); R(15, 24, 10, 1, WH); // sailor collar with pink trim
+      R(18, 25, 4, 2, '#ff5fa2'); R(19, 27, 2, 2, '#ff5fa2'); // pink ribbon tie
+      R(10, 27, 20, 0.5, '#ffc2dc');
+    },
+    front: ({ R }) => {
+      const H = '#7a4b33', HI = '#9a6447', P = '#ff6fae';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 5, H); R(16, 6, 6, 1, HI);
+      R(14, 11, 3, 2, H); R(18, 11, 2, 1, H); R(21, 11, 3, 2, H); R(24, 11, 2, 1, H); // bangs
+      R(17, 7, 1, 4, P); R(23, 8, 1, 3, P); // pink streaks
+      R(12.5, 9, 1.5, 14, H); R(26, 9, 1.5, 14, H); R(12.5, 19, 1.5, 4, P); R(26, 19, 1.5, 4, P); // side locks, pink ends
+      // the big ribbon: two upright loops and a knot
+      R(11, 0, 8, 6, K); R(12, 1, 6, 4, P); R(13, 1, 2, 1, '#ffb3d4');
+      R(21, 0, 8, 6, K); R(22, 1, 6, 4, P); R(25, 1, 2, 1, '#ffb3d4');
+      R(18, 3, 4, 3, K); R(19, 3.5, 2, 2, '#ff4f96');
+    },
+  },
+  // Menahem (look 'fern'): long straight violet hair parted in the middle, calm violet eyes, black coat with a white collar,
+  // a ledger sheet and a few coins behind her (she keeps Val's books)
+  fern: {
+    skin: '#fbe6dc', eye: '#8a5fc8', shirt: '#1d1a26', shirtHi: '#2e2a3a',
+    room: (F, t) => {
+      F(2, 4, 9, 11, '#ffffff10'); // the ledger sheet
+      for (let y = 6; y < 15; y += 1.5) F(2.5, y, 8, 0.25, '#ffffff22');
+      F(5, 4.5, 0.25, 10, '#ffffff22'); F(8, 4.5, 0.25, 10, '#ffffff22');
+      F(8.5, 13, 1.5, 0.5, `rgba(127,214,140,${0.5 + 0.3 * Math.sin(t * 2)})`); // the running total
+      for (const [x, y] of [[31, 24], [33, 24], [32, 22.5]]) { F(x, y, 2, 1.5, '#d8a63a'); F(x + 0.5, y + 0.25, 1, 0.5, '#f4d27a'); }
+    },
+    back: ({ R }) => { R(11, 7, 18, 24, K); R(12, 8, 16, 23, '#7a55b0'); R(13, 20, 1, 11, '#9a78d0'); R(26, 20, 1, 11, '#9a78d0'); },
+    clothes: ({ R }) => {
+      R(15, 23, 10, 2, K); R(16, 23, 8, 2, '#f4f1f6'); R(19, 25, 2, 1, '#f4f1f6'); // white collar
+      R(19, 26, 2, 5, '#2e2a3a'); R(20, 27, 0.5, 0.5, '#d8a63a'); R(20, 29, 0.5, 0.5, '#d8a63a'); // buttons
+    },
+    mouth: ({ R, open }) => { if (open) { R(19, 19, 2, 2, K); R(19.5, 20, 1, 1, '#7a2e3a'); } else R(19, 19.5, 2, 0.5, K); },
+    front: ({ R }) => {
+      const H = '#7a55b0', HI = '#a588d8';
+      R(13, 5, 14, 5, K); R(14, 6, 12, 5, H); R(19.5, 6, 1, 3, '#5a3d88'); // centre part
+      R(15, 7, 3, 1, HI); R(22, 7, 3, 1, HI);
+      R(14, 11, 4, 1, H); R(14, 12, 2, 1, H); R(22, 11, 4, 1, H); R(24, 12, 2, 1, H); // bangs swept aside
+      R(12.5, 9, 1.5, 14, H); R(26, 9, 1.5, 14, H); // straight side locks
+      R(26, 8, 1.5, 1.5, '#d8a63a'); R(26.25, 8.25, 1, 1, '#f4d27a'); // a small gold hair clip
+    },
+  },
+};
+
+// ---------- tiles ----------
+const stage = document.getElementById('stage');
+const tiles = new Map();
+for (const a of TEAM) {
+  const el = document.createElement('div');
+  el.className = 'tile idle';
+  el.innerHTML = `<canvas width="320" height="240"></canvas><div class="chip">standby</div>
+    <div class="bubble" aria-live="polite"><span class="who">${a.name}</span><span class="say"></span><span class="caret"></span></div>
+    <div class="name"><span class="dot"></span>${a.name} <span class="role">${a.role}</span></div><div class="hand">✋</div>`;
+  stage.appendChild(el);
+  const ctx = el.querySelector('canvas').getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  tiles.set(a.id, { el, a, ctx, chip: el.querySelector('.chip'), bubble: el.querySelector('.bubble'), say: el.querySelector('.say'), state: { talking: false, sleepy: false, needs: false }, since: Date.now(), text: '', shown: 0 });
+}
+
+// Fit every 4:3 tile into the stage: try each column count and keep the one that gives the biggest tiles
+function fitStage() {
+  const cs = getComputedStyle(stage);
+  const w = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const h = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  if (w <= 0 || h <= 0) return;
+  const n = TEAM.length, gap = w < 500 ? 8 : 14, border = 6;
+  let best = { cols: 1, tw: 0 };
+  for (let cols = 1; cols <= n; cols++) {
+    const rows = Math.ceil(n / cols);
+    const byW = (w - gap * (cols - 1)) / cols;
+    const byH = ((h - gap * (rows - 1)) / rows - border) * 4 / 3 + border;
+    const tw = Math.min(byW, byH);
+    if (tw > best.tw) best = { cols, tw };
+  }
+  stage.style.setProperty('--cols', best.cols);
+  stage.style.setProperty('--gap', gap + 'px');
+  stage.style.setProperty('--tw', Math.max(90, Math.floor(best.tw)) + 'px');
+}
+new ResizeObserver(fitStage).observe(stage);
+fitStage();
+
+function setTile(id, { talking = false, needs = false, chip = 'standby', say = '', idleFor = 0 }) {
+  const r = tiles.get(id);
+  r.state = { talking, needs, sleepy: !talking && !needs && idleFor > 10 * 60_000 };
+  r.el.classList.toggle('talking', talking);
+  r.el.classList.toggle('needs', needs);
+  r.el.classList.toggle('idle', !talking && !needs);
+  r.chip.textContent = r.state.sleepy ? 'zzz…' : chip;
+  if (say !== r.text) { r.text = say; r.shown = 0; } // a new line types itself out
+  r.bubble.classList.toggle('on', !!say);
+}
+
+// ---------- the group chat (messages go through the office server; sena-bridge.mjs lets each teammate answer) ----------
+const NAME_TO_ID = Object.fromEntries(TEAM.map((a) => [a.name.toLowerCase(), a.id]));
+const logEl = document.getElementById('log');
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const hhmm = (ms) => new Date(ms).toTimeString().slice(0, 5);
+function addLine(kind, who, text, at = Date.now()) {
+  logEl.querySelector('.empty')?.remove();
+  const near = logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight < 60;
+  const li = document.createElement('li');
+  li.className = kind;
+  li.innerHTML = kind === 'sys' ? `${esc(who)} ${esc(text)} · ${hhmm(at)}` : `<span class="who">${esc(who)}<time>${hhmm(at)}</time></span>${esc(text)}`;
+  logEl.appendChild(li);
+  while (logEl.children.length > 120) logEl.firstChild.remove();
+  if (near || kind === 'val') logEl.scrollTop = logEl.scrollHeight;
+}
+const note = (who, text) => addLine('sys', who, text);
+
+let chatSince = Date.now() - 6 * 3600_000, lastChatId = 0, valSaid = { text: '', at: 0 }, senaSaid = { text: '', at: 0 };
+const said = {}; // what each teammate last said in the chat
+async function pollChat() {
+  try {
+    const { messages = [] } = await (await fetch(`/chat?since=${chatSince}`)).json();
+    for (const m of messages) {
+      if (m.id <= lastChatId) continue;
+      lastChatId = m.id; chatSince = Math.max(chatSince, m.timestamp - 1);
+      if (m.sender === 'Val') { addLine('val', 'Val', m.text, m.timestamp); valSaid = { text: m.text, at: m.timestamp }; }
+      if (m.sender === 'Sena') { addLine('sena', 'Sena', m.text, m.timestamp); senaSaid = { text: m.text, at: m.timestamp }; }
+      else if (NAME_TO_ID[String(m.sender).toLowerCase()] && m.sender !== 'Val') { // a teammate answering in the group chat
+        addLine('agent', m.sender, m.text, m.timestamp); said[NAME_TO_ID[m.sender.toLowerCase()]] = { text: m.text, at: m.timestamp };
+      }
+    }
+  } catch { /* the server is down: the header already says so */ }
+}
+pollChat();
+setInterval(pollChat, 1500);
+
+const box = document.getElementById('msg'), sendBtn = document.getElementById('send');
+async function send() {
+  const text = box.value.trim();
+  if (!text) return;
+  sendBtn.disabled = true;
+  try {
+    const r = await fetch('/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: 'Val', text }) });
+    if (!r.ok) throw new Error(r.status);
+    box.value = '';
+    pollChat();
+  } catch { note('⚠', 'pesan gagal terkirim, server kantor nyala?'); }
+  sendBtn.disabled = false;
+  box.focus();
+}
+document.getElementById('compose').onsubmit = (e) => { e.preventDefault(); send(); };
+box.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
+const clip = (s, n = 110) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+
+// ---------- what an agent is doing, said the way a teammate would say it ----------
+const base = (p) => String(p || '').trim().split(/[\\/]/).pop();
+function say(status) {
+  const s = String(status || '');
+  let m;
+  if ((m = /^googling '(.*)'/.exec(s))) return `Bentar, aku googling "${m[1]}"…`;
+  if ((m = /^opening (.*)/.exec(s))) return `Lagi baca artikel di ${m[1]}…`;
+  if ((m = /^reading (.*)/.exec(s))) return `Lagi baca ${base(m[1])}…`;
+  if ((m = /^writing (.*)/.exec(s))) return `Aku tulis ke ${base(m[1])} ya…`;
+  if ((m = /^editing (.*)/.exec(s))) return `Lagi revisi ${base(m[1])}…`;
+  if ((m = /^searching for '(.*)'/.exec(s))) return `Nyari "${m[1]}" di catatan…`;
+  if (/^finding files/.test(s)) return 'Nyari file yang pas…';
+  if ((m = /^using \/(.*)/.exec(s))) return `Buka panduan ${m[1].split(':').pop()} dulu…`;
+  if (/^running:|^using (PowerShell|Bash)/.test(s)) return 'Jalanin perintah sebentar…';
+  if (/^using (Agent|Task)/.test(s)) return 'Oke, aku bagi tugas ke tim!';
+  if (/^using mcp__ccd_turn|^using ToolSearch/.test(s)) return 'Beresin catatan dulu…';
+  if (/^failed/.test(s)) return 'Eh, ada yang error. Aku coba lagi…';
+  return null;
+}
+const THINK = ['Hmm… lagi mikir.', 'Bentar, brainstorming dulu…', 'Kayaknya aku punya ide…', 'Nyusun rencananya…'];
+
+// ---------- live data from the office server ----------
+let prev = {}, senaIdleSince = Date.now(), bosSpokeAt = 0;
+const promptSeen = {};
+
+async function poll() {
+  let agents, sessions, rapat;
+  try {
+    [agents, sessions, rapat] = await Promise.all([fetch('/agents').then((r) => r.json()), fetch('/sessions').then((r) => r.json()),
+      fetch('/rapat-status.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))]);
+    document.getElementById('offline').classList.remove('on');
+  } catch {
+    document.getElementById('offline').classList.add('on');
+    return;
+  }
+  const now = Date.now(), cur = {};
+  // Sena = the Claude session you talk to (the office's own chat bot is left out)
+  // sessions the chat bridge runs for a teammate (or its router) are not Sena
+  const owner = rapat.sessions || {}, router = new Set(rapat.router || []), busy = rapat.working || {};
+  const own = {}; for (const s of sessions.sessions || []) if (owner[s.id] && owner[s.id] !== 'sena') own[owner[s.id]] = s;
+  const main = (sessions.sessions || []).filter((s) => s.title !== 'agent-office-bot' && s.main && !router.has(s.id) && !(owner[s.id] && owner[s.id] !== 'sena'))
+    .sort((a, b) => (b.lastActivityAt || 0) - (a.lastActivityAt || 0))[0];
+  if (main) {
+    const st = main.main.state, working = st === 'working' || st === 'compacting' || !!busy.sena, needs = st === 'needs-you';
+    cur.sena = working ? 'kerja' : needs ? 'izin' : 'diam';
+    if (working || needs) senaIdleSince = now;
+    const fresh = main.lastStatusAt && now - main.lastStatusAt < 6000;
+    const replied = now - senaSaid.at < 9000; // her last chat reply stays in the bubble for a moment
+    const line = needs ? 'Val, aku butuh izin kamu di Claude ya 🙏' : working ? (fresh && say(main.lastStatus)) || THINK[Math.floor(now / 5000) % THINK.length] : replied ? clip(senaSaid.text) : '';
+    setTile('sena', { talking: working || replied, needs, chip: 'nunggu brief', say: line, idleFor: now - senaIdleSince });
+    // a brief typed in a Claude window (not this chat) gets a line; each session is tracked on its own
+    const lp = main.main.lastPromptAt, seenLp = promptSeen[main.id];
+    if (lp && lp !== seenLp) { if (seenLp && now - valSaid.at > 8000) note('Val', 'kasih brief ke Sena lewat Claude'); promptSeen[main.id] = lp; bosSpokeAt = Math.max(bosSpokeAt, lp); }
+  } else setTile('sena', { chip: 'belum join' });
+  const valTalk = now - valSaid.at < 6000;
+  setTile('bos', { talking: valTalk || now - bosSpokeAt < 2500, chip: '', say: valTalk ? clip(valSaid.text) : '' });
+  const typing = Object.keys(busy).map((id) => tiles.get(id)?.a.name).filter(Boolean);
+  if (cur.sena === 'kerja' && !typing.includes('Sena')) typing.unshift('Sena');
+  document.getElementById('typing').textContent = typing.length ? `${typing.join(', ')} lagi ngetik…` : '';
+
+  const byId = {};
+  for (const ag of agents.agents || []) { const id = NAME_TO_ID[(ag.name || '').toLowerCase()]; if (id) byId[id] = ag; }
+  for (const a of TEAM.slice(2)) {
+    const ag = byId[a.id], r = tiles.get(a.id), mine = own[a.id];
+    const chatting = !!busy[a.id] || (mine && ['working', 'compacting'].includes(mine.main?.state));
+    const spoke = said[a.id] && now - said[a.id].at < 9000;
+    const task = ag ? String(ag.task || '').replace(new RegExp('^' + a.name + ':\\s*', 'i'), '') : '';
+    cur[a.id] = ag ? 'kerja' : 'diam';
+    if (ag && prev[a.id] !== 'kerja') { r.since = now; r.startedAt = now; note(a.name, 'mulai: ' + task); }
+    if (!ag && prev[a.id] === 'kerja') { r.since = now; note(a.name, 'selesai ✓'); }
+    if (chatting && !ag) cur[a.id] = 'chat';
+    let line = '';
+    if (ag) line = now - r.startedAt < 3500 ? `Siap! Aku kerjain: ${task}` : say(ag.status) || THINK[Math.floor(now / 5000 + a.name.length) % THINK.length];
+    else if (spoke) line = clip(said[a.id].text);
+    else if (chatting) line = (mine?.lastStatusAt && now - mine.lastStatusAt < 6000 && say(mine.lastStatus)) || THINK[Math.floor(now / 5000 + a.name.length) % THINK.length];
+    if (ag || chatting || spoke) r.since = now;
+    setTile(a.id, { talking: !!ag || chatting || spoke, chip: 'standby', say: line, idleFor: now - r.since });
+  }
+  if (prev.sena && prev.sena !== cur.sena && cur.sena === 'izin') note('Sena', 'butuh izin kamu');
+  prev = cur;
+  const live = Object.values(cur).filter((v) => v === 'kerja' || v === 'chat').length;
+  document.getElementById('count').textContent = `${TEAM.length} peserta · ${live} lagi kerja`;
+}
+poll();
+setInterval(poll, 1000);
+
+// ---------- draw loop: avatars, typing bubbles, call timer ----------
+const t0 = performance.now();
+function frame(ms) {
+  const t = (ms - t0) / 1000;
+  for (const r of tiles.values()) {
+    drawAvatar(r.ctx, r.a, t, r.state);
+    if (r.shown < r.text.length) { r.shown = Math.min(r.text.length, r.shown + 1.2); r.say.textContent = r.text.slice(0, Math.floor(r.shown)); }
+  }
+  const s = Math.floor(t), mm = String(Math.floor(s / 60) % 60).padStart(2, '0'), ss = String(s % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = s >= 3600 ? `${Math.floor(s / 3600)}:${mm}:${ss}` : `${mm}:${ss}`;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+const side = document.getElementById('side'), chatBtn = document.getElementById('chatBtn');
+const showNotes = (on) => { side.classList.toggle('hidden', !on); chatBtn.classList.toggle('on', on); chatBtn.setAttribute('aria-pressed', String(on)); fitStage(); };
+if (innerWidth < 760) showNotes(false); // phones: the faces first
+chatBtn.onclick = () => showNotes(side.classList.contains('hidden'));
+</script>
+</body>
+</html>

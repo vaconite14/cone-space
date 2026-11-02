@@ -2,6 +2,10 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-02**: Disetujui Sena dan sudah ditulis ke sheet: Kas Awal CIMB (Profil Kekayaan Awal) disamakan dengan saldo
+  awal bank per 1 Jan 2026; tanggal Pindah Kas disesuaikan dengan tanggal posting mutasi (CIMB→OCBC dan OCBC→BCA jadi 1/26).
+  Aturan: **Kas Awal setiap rekening = saldo awal bank per 1 Januari 2026.**
+
 - **2026-11-02**: Dari Sena: transfer dari/ke orang biasanya masuk Utang/Piutang (cek dulu); Lalamove dan Pettycash terkait
   Olivetree/Koukie = Piutang; bayar SPayLater/kartu kredit sengaja dirinci jadi beberapa baris di tanggal yang sama.
   Detail di README bagian 10. Data mutasi tidak disimpan di repo; hasil rekonsiliasi dilaporkan di chat.

@@ -2,6 +2,12 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-09**: Februari 2026 ditutup. BCA dan OCBC cocok dengan saldo akhir bank; GoPay cocok (selisih hanya top up
+  28/2 yang terposting di BCA 1/3); CIMB tidak ada transaksi. Utang awal Cicilan Ipad (3 cicilan tersisa per 1 Jan)
+  ditambahkan di Profil Kekayaan Awal, utang awal Shopee Pay Later dihapus (keputusan Sena).
+  Pendapatan "penyesuaian" yang tidak ada di mutasi mana pun dihapus (keputusan Sena). Uang yang dikembalikan ke pengirim
+  dicatat sebagai pengeluaran dengan kategori yang sama dengan pemasukannya (mis. uang car = Transport).
+
 - **2026-11-09**: Koreksi: baris Truffle Toast 2/1 rekening "bca" (huruf kecil) tidak terhitung sebagai BCA, jadi saldo BCA
   akhir Januari di sheet lebih Rp32.500. Diperbaiki jadi "BCA"; saldo BCA akhir Januari sekarang sama dengan bank.
   Semua tab sudah dicek, tidak ada nama rekening lain yang salah ketik.

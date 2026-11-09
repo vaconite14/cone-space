@@ -125,6 +125,13 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
 - **GoPay**: di riwayat GoPay, transaksi dengan metode pembayaran kartu (bukan "GoPay Saldo") dibayar pakai kartu kredit,
   jadi masuk rincian tagihan kartu kredit, bukan rekening GoPay. Pasangan pembelian + refund di hari yang sama (mis.
   YouTube Music) selama ini tidak dicatat. Transfer ke merchant perorangan lewat GoPay = beli makanan (lihat rincian Sena).
+- **Bayar ke Koukie (QR "Koukie" di mutasi BCA)**: kasir Koukie memberi Caini uang tunai hasil penjualan, lalu Caini
+  mentransfer nilainya ke rekening Koukie. Dicatat sebagai **Pindah Kas BCA → Uang Tunai** (bukan pengeluaran).
+- **Transfer ke OVO/e-wallet SPG** (mis. SPG menalangi kembalian customer, Caini mengganti lewat OVO dan menerima tunai
+  dari SPG): dicatat **Pindah Kas BCA → Uang Tunai**.
+- **Google Play** di GoPay: nominal di tagihan sudah termasuk pajak (mis. Rp15.000 + PPN = Rp16.650). Catat sesuai tagihan.
+- Top up GoPay yang masuk di GoPay akhir bulan tapi baru terposting di BCA tanggal 1 bulan berikutnya: tetap dicatat dengan
+  tanggal BCA. Saldo GoPay akhir bulan di sheet akan kurang sebesar top up itu; ini wajar.
 - `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
   rekening tujuan BCA. Bukan pendapatan.
 

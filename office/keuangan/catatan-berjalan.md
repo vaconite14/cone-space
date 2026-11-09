@@ -2,6 +2,10 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-09**: Maret 2026 ditutup; BCA, OCBC, GoPay cocok dengan saldo akhir bank, CIMB tidak ada transaksi.
+  Dibawa ke April: sisa tagihan kartu kredit Maret (sisa item villa + bea meterai) belum dicatat; catat saat pembayaran
+  kartu kredit di April (cek tagihan kartu kredit Maret).
+
 - **2026-11-09**: Februari 2026 ditutup. BCA dan OCBC cocok dengan saldo akhir bank; GoPay cocok (selisih hanya top up
   28/2 yang terposting di BCA 1/3); CIMB tidak ada transaksi. Utang awal Cicilan Ipad (3 cicilan tersisa per 1 Jan)
   ditambahkan di Profil Kekayaan Awal, utang awal Shopee Pay Later dihapus (keputusan Sena).

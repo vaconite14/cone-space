@@ -132,6 +132,11 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
 - **Google Play** di GoPay: nominal di tagihan sudah termasuk pajak (mis. Rp15.000 + PPN = Rp16.650). Catat sesuai tagihan.
 - Top up GoPay yang masuk di GoPay akhir bulan tapi baru terposting di BCA tanggal 1 bulan berikutnya: tetap dicatat dengan
   tanggal BCA. Saldo GoPay akhir bulan di sheet akan kurang sebesar top up itu; ini wajar.
+- **Potong utang (non-tunai)**: kalau bagian orang lain atas pengeluaran Caini dibayar dengan mengurangi utang Caini ke
+  orang itu, catat dua baris di rekening yang sama: bayar utang (Catat - Utang) dan Pendapatan Lainnya dengan nominal sama.
+  Saldo tidak berubah, sisa utang berkurang.
+- **Pembayaran kartu kredit sebagian**: rincian diambil dari item di tagihan secara berurutan; item yang belum lunas dibawa
+  ke pembayaran berikutnya dan dicatat di `catatan-berjalan.md`.
 - `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
   rekening tujuan BCA. Bukan pendapatan.
 

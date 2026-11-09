@@ -137,6 +137,11 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
   Saldo tidak berubah, sisa utang berkurang.
 - **Pembayaran kartu kredit sebagian**: rincian diambil dari item di tagihan secara berurutan; item yang belum lunas dibawa
   ke pembayaran berikutnya dan dicatat di `catatan-berjalan.md`.
+- **Cicilan kartu kredit** (belanja yang diubah jadi cicilan BCA): catat tiap cicilan sebagai Pengeluaran di tanggal
+  pembayaran kartu kredit, rincian "<nama> (cicilan x/n, kartu kredit)". Biaya bunga kartu kredit = Darurat.
+- **Refund e-wallet**: pembelian tetap dicatat sebesar nominal asli, refund dicatat terpisah sebagai Pendapatan Lainnya.
+- **Selalu baca seluruh tab** (Investasi, Utang, Piutang) sampai baris terakhir sebelum menyimpulkan ada transaksi yang
+  belum tercatat.
 - `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
   rekening tujuan BCA. Bukan pendapatan.
 

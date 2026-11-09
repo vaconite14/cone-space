@@ -2,6 +2,10 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-09**: April 2026 ditutup; BCA, OCBC, GoPay cocok dengan saldo akhir bank, CIMB tidak ada transaksi.
+  Dibawa ke Mei dan Juni: cicilan kartu kredit Agoda (hotel) 2/3 dan 3/3 dicatat saat pembayaran kartu kredit.
+  Rincian kartu kredit Maret diperbaiki (pembayaran Maret untuk villa, hotel jadi cicilan mulai April).
+
 - **2026-11-09**: Maret 2026 ditutup; BCA, OCBC, GoPay cocok dengan saldo akhir bank, CIMB tidak ada transaksi.
   Dibawa ke April: sisa tagihan kartu kredit Maret (sisa item villa + bea meterai) belum dicatat; catat saat pembayaran
   kartu kredit di April (cek tagihan kartu kredit Maret).

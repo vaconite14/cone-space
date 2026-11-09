@@ -2,6 +2,10 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-09**: **Kas Timotius** adalah dana kelompok yang dikelola Caini dan berputar keluar-masuk di rekening Caini
+  (dicatat lewat tab Piutang, peminjam "Kas Timotius"). Setiap transaksi yang kelihatan terkait Kas Timotius:
+  **tanya Sena dulu** sebelum mengusulkan kategori atau koreksi. Jangan dianggap pengeluaran/pendapatan pribadi.
+
 - **2026-11-09**: April 2026 ditutup; BCA, OCBC, GoPay cocok dengan saldo akhir bank, CIMB tidak ada transaksi.
   Dibawa ke Mei dan Juni: cicilan kartu kredit Agoda (hotel) 2/3 dan 3/3 dicatat saat pembayaran kartu kredit.
   Rincian kartu kredit Maret diperbaiki (pembayaran Maret untuk villa, hotel jadi cicilan mulai April).

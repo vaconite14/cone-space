@@ -142,6 +142,7 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
 - **Refund e-wallet**: pembelian tetap dicatat sebesar nominal asli, refund dicatat terpisah sebagai Pendapatan Lainnya.
 - **Selalu baca seluruh tab** (Investasi, Utang, Piutang) sampai baris terakhir sebelum menyimpulkan ada transaksi yang
   belum tercatat.
+- **Kas Timotius** (dana kelompok yang dikelola Caini): selalu tanya Sena dulu untuk transaksi yang terkait.
 - `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
   rekening tujuan BCA. Bukan pendapatan.
 

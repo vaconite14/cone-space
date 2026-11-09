@@ -2,6 +2,10 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-09**: Koreksi: baris Truffle Toast 2/1 rekening "bca" (huruf kecil) tidak terhitung sebagai BCA, jadi saldo BCA
+  akhir Januari di sheet lebih Rp32.500. Diperbaiki jadi "BCA"; saldo BCA akhir Januari sekarang sama dengan bank.
+  Semua tab sudah dicek, tidak ada nama rekening lain yang salah ketik.
+
 - **2026-11-09**: Januari 2026 ditutup, semua rekening (BCA, OCBC, CIMB, GoPay, kartu kredit) cocok dengan mutasi.
   Keputusan Sena:
   - Talangan dari **sebelum Januari 2026** yang dibayar balik di 2026 dicatat sebagai **Pendapatan Lainnya**

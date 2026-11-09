@@ -128,6 +128,11 @@ Online Shop, Lainnya untuk pengeluaran) tidak dipakai. Padanannya ada di bagian 
 - `Catat - Investasi`: pencairan reksa dana (BIBIT, Sucorinvest Money Market Fund) dicatat di tabel jual (N:V),
   rekening tujuan BCA. Bukan pendapatan.
 
+- **Cek akhir setiap bulan (wajib):** setelah rekonsiliasi, bandingkan saldo akhir bulan tiap rekening di sheet dengan
+  saldo akhir di mutasi bank (lihat `Mutasi Rekening Otomatis`, atau hitung dari semua tab `Catat -`). Nama rekening harus
+  **persis** sama dengan daftar (huruf besar/kecil berpengaruh: "bca" tidak terhitung sebagai BCA). Bulan belum dianggap
+  selesai sebelum saldo akhir sama sampai ke rupiah.
+
 ## 9. Batasan
 - Hanya sheet KEUNGAN CAINI. Tidak transfer, bayar, atau mengirim apa pun.
 - Nomor rekening, saldo, dan mutasi mentah tidak disimpan di repo (paling banyak 4 digit terakhir kalau Sena mengizinkan).

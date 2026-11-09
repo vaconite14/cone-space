@@ -2,6 +2,14 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-09**: Januari 2026 ditutup, semua rekening (BCA, OCBC, CIMB, GoPay, kartu kredit) cocok dengan mutasi.
+  Keputusan Sena:
+  - Talangan dari **sebelum Januari 2026** yang dibayar balik di 2026 dicatat sebagai **Pendapatan Lainnya**
+    ("Ganti uang ... (bulan)"), bukan Piutang, karena pencatatan dimulai Januari.
+  - Belanja kartu kredit yang tadinya dicatat sebagai "bayar utang BCA Credit Card" diganti jadi **Pengeluaran**
+    per kategori di tanggal pembayaran (PayPal = Vtuber, biaya overlimit = Darurat, bea meterai = Digital).
+    Utang "BCA Credit Card" hanya dipakai kalau memang ada cicilan/pinjaman.
+
 - **2026-11-03**: Target Sena: rapikan sheet sampai November 2026 supaya cocok dengan mutasi, bulan per bulan.
   Aturan dari Sena:
   - Catat sesuai uang yang benar-benar keluar/masuk di mutasi (nominal dan tanggal posting).

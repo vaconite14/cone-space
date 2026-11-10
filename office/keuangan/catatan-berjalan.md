@@ -2,6 +2,11 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-10**: Mei 2026 dirapikan sesuai mutasi (baris dobel dihapus, makan bareng yang diganti teman dicatat bruto:
+  pengeluaran penuh + Pendapatan Lainnya untuk gantinya). OCBC dan GoPay cocok. BCA masih selisih menunggu jawaban Sena
+  (satu transaksi Kas Timotius keluar, dan dua transfer masuk dari teman yang di sheet tercatat sebagai tarik tunai).
+  Belum diputuskan: saldo OCBC dalam SGD (gaji SGD yang belum dicairkan) mau dicatat sebagai rekening sendiri atau tidak.
+
 - **2026-11-09**: **Kas Timotius** adalah dana kelompok yang dikelola Caini dan berputar keluar-masuk di rekening Caini
   (dicatat lewat tab Piutang, peminjam "Kas Timotius"). Setiap transaksi yang kelihatan terkait Kas Timotius:
   **tanya Sena dulu** sebelum mengusulkan kategori atau koreksi. Jangan dianggap pengeluaran/pendapatan pribadi.

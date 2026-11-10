@@ -2,6 +2,19 @@
 
 Keputusan dan aturan dari Sena, terbaru di atas.
 
+- **2026-11-10**: Keputusan Sena:
+  - **Kas Timotius = kas Pemuda Timotius** (komunitas gereja). Ada rekening pemuda baru atas nama Caini; transfer dari
+    BCA ke rekening itu = Kas Timotius keluar. Rekening pemuda tidak masuk sheet ini. Iuran teman untuk acara pemuda
+    (mis. Eattime) = Kas Timotius masuk/keluar, bukan pendapatan/pengeluaran Caini; bagian Caini sendiri = pengeluaran.
+  - Sheet Kas Timotius terpisah dikerjakan **setelah** pencatatan pribadi selesai sampai November.
+  - Rekening baru **OCBC SGD** ditambahkan (Profil Kekayaan Awal, saldo awal 0). Cara catat: SGD masuk = SGD x kurs hari itu;
+    belanja SGD pakai kurs saat SGD masuk; saat dicairkan, selisih kurs dicatat satu baris. Cek akhir bulan dalam SGD.
+  - **Tunai SGD** ditambahkan nanti, saat membahas trip Singapura (Juni).
+  - **Uang tunai** belum pernah dicatat rapi. Di akhir, saldo tunai di sheet dibandingkan dengan uang tunai sebenarnya;
+    selisih ditelusuri bersama Sena, sisanya dicatat sebagai pengeluaran lupa/sedekah. Pandu dengan pertanyaan.
+  - Kategori **SG26** = trip Singapura 2026 (tiket pesawat, hotel Agoda, dll.).
+  Mei: BCA, OCBC, GoPay cocok dengan mutasi. Belum dicatat: arus SGD Maret-Mei (menunggu konfirmasi pemilik SGD).
+
 - **2026-11-10**: Mei 2026 dirapikan sesuai mutasi (baris dobel dihapus, makan bareng yang diganti teman dicatat bruto:
   pengeluaran penuh + Pendapatan Lainnya untuk gantinya). OCBC dan GoPay cocok. BCA masih selisih menunggu jawaban Sena
   (satu transaksi Kas Timotius keluar, dan dua transfer masuk dari teman yang di sheet tercatat sebagai tarik tunai).

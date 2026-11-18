@@ -7,4 +7,4 @@
   (keluar dari lokasi bazaar dengan `PINDAH GUDANG`).
 - **2026-11-18**: STATUS RETUR = barang terjual yang dikembalikan pembeli. Baris PENJUALAN aslinya ditandai `RETUR`
   supaya stoknya kembali.
-- **Belum diputuskan**: lokasi PIK AVENUE belum punya tab STOCK dan tidak dihitung di STOCK GLOBAL.
+- **2026-11-18**: PIK AVENUE belum buka bazaar lagi; diabaikan dulu (belum ada tab STOCK, tidak dihitung di STOCK GLOBAL).

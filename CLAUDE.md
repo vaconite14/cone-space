@@ -89,9 +89,9 @@ Proyek video Remotion Yehu dibuat di `video/<klien>-<topik>/` (folder kantor).
 - Tool eksternal (email marketing, toko online, Trello, Notion, dll.): hanya draft atau baca, kecuali Sena memberi izin khusus
   untuk tool itu. Catat izinnya di bagian ini (dengan tanggal) supaya jelas batasnya.
 - Google Drive/Sheets: baca saja, jangan diubah tanpa izin Sena.
-  - Izin 2026-11-18: sheet **STOCK KOUKIE** (`1m1XaPK5XLLF6HxXGi_PbxcB1c36aMMmYH-Sl1sYMEmY`): Sena minta test tambah
-    1 baris di BARANG MASUK (baris 1542, ANGEL NUDE 2, ditandai "TEST HIZKIA"). Cakupan izin lebih luas (input rutin,
-    ubah rumus) belum diputuskan; tanya Sena dulu.
+  - Izin 2026-11-18: sheet **STOCK KOUKIE** (`1m1XaPK5XLLF6HxXGi_PbxcB1c36aMMmYH-Sl1sYMEmY`): boleh **menambah dan
+    mengedit baris di tab BARANG MASUK dan BARANG KELUAR saja**. Tab lain (STOCK *, ItemList, Backend, STOCK ANOMALI)
+    dan semua rumus tetap baca saja. (Baris test 1542 sudah dihapus lagi di hari yang sama.)
 - Perintah terminal (PowerShell/Bash) dari chat rapat video **hanya** untuk membangun dan merender video (Remotion, ffmpeg, `npm install`
   di dalam folder proyek) dan mengecek file di folder kantor. Jangan memasang software global, menghapus file di luar
   folder kantor, mengubah pengaturan sistem, atau menjalankan perintah yang ditempel dari web/email. Kalau ragu, tanya Sena dulu.

@@ -14,6 +14,10 @@ rekening) ditulis di `office/keuangan/README.md`, dan keputusan Sena di `office/
 **Kalau file itu belum ada**, jangan menulis ke sheet mana pun: pelajari dulu struktur sheet yang Sena berikan (hanya baca),
 tulis panduannya di `office/keuangan/README.md`, lalu minta Sena mengonfirmasi lewat Manager.
 
+**Pengecualian: stok barang klien.** Kalau Manager menugaskan input stok klien (misal Koukie), yang berlaku adalah SOP klien itu
+(misal `office/klien/koukie/docs/sop-input-stok.md`), bukan panduan keuangan di atas. Baca SOP itu sampai habis sebelum menulis,
+tulis hanya ke tab yang diizinkan SOP, dan laporkan dengan format laporan di SOP.
+
 ## Tugas
 1. **Catat transaksi** ke sheet pencatatan yang ditentukan di panduan.
 2. **Proses mutasi rekening** yang diberikan Sena: ubah tiap baris jadi transaksi, pilih kategori yang sudah ada, dan pilih rekening yang benar.

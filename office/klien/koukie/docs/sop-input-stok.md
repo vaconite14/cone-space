@@ -26,7 +26,7 @@ Baca seluruh file ini sebelum menulis apa pun. Kalau ada yang tidak cocok dengan
 | E SIZE | Ukuran | Salah satu dari: `2, 4, 6, 8, 10, 12, 14, 16` (tulis sebagai angka) atau `XS, S, M, L` (tulis sebagai teks). |
 | F QTY | Jumlah | Angka bulat positif. Satu baris = satu kombinasi item + warna + size. |
 | G GUDANG | Lokasi stok | Salah satu dari: `GUDANG`, `SMS`, `TOKYO`, `CENTRAL MARKET`. (`PIK AVENUE` ada di dropdown tapi tidak dihitung di rekap: kalau diminta, berhenti dan tanya.) |
-| H STATUS RETUR | Kosongkan | Tulis `""`. Isi `RETUR` **hanya** kalau Sena bilang begitu (baris berstatus RETUR tidak dihitung di stok). |
+| H STATUS RETUR | Kosongkan | Tulis `""` untuk transaksi baru. Lihat "Retur" di bagian 3. |
 | I TUJUAN | Jenis transaksi | Lihat bagian 3. |
 | J NOTES | Keterangan | Lihat bagian 3. Tulis huruf besar. (Data lama kadang huruf kecil, misal "dari gudang": biarkan, tidak memengaruhi rekap.) |
 
@@ -53,10 +53,19 @@ Penjualan dan barang keluar non-pindah **cukup 1 baris** di BARANG KELUAR. Stokn
 | Stok awal untuk **season bazaar baru** | lokasi bazaar | `MASUK BAZAAR` | `DARI <LOKASI ASAL>` |
 | Tambah stok ke **bazaar yang sedang berjalan** | lokasi bazaar | `RESTOCK` | `DARI <LOKASI ASAL>` |
 | Barang baru (produksi baru) | biasanya `GUDANG` | `ITEM BARU` | keterangan dari Sena |
+| Barang **kembali ke GUDANG karena bazaar di lokasi itu tutup** | `GUDANG` | `DATA STOK` | `DARI <LOKASI BAZAAR>`, misal `DARI SMS` |
 | Penyesuaian / stock opname | lokasi | `DATA STOK` | keterangan dari Sena |
 
 Kalau tidak jelas apakah ini season bazaar baru atau restock bazaar berjalan, **tanya**.
-Barang yang kembali dari bazaar ke GUDANG: **tanya Sena dulu** tujuan mana yang dipakai (belum ada aturan baku).
+Barang kembali ke GUDANG setelah bazaar tutup juga pindah lokasi (2 baris): BARANG KELUAR dari lokasi bazaar dengan
+`PINDAH GUDANG` + notes `KE GUDANG`, lalu BARANG MASUK di `GUDANG` dengan `DATA STOK` + notes `DARI <LOKASI BAZAAR>`.
+
+### Retur (barang terjual dikembalikan pembeli)
+Jangan menambah baris baru. Cari **baris PENJUALAN aslinya** di BARANG KELUAR (tanggal, item, warna, size, qty, gudang, channel),
+lalu isi kolom H baris itu dengan `RETUR`. Baris berstatus RETUR tidak dihitung, jadi stoknya otomatis kembali ke lokasi itu.
+- Ini satu-satunya kasus boleh mengedit baris lama, dan hanya kolom H. Sebutkan nomor barisnya di laporan.
+- Kalau baris penjualannya tidak ketemu, atau ada lebih dari satu yang cocok, **tanya**.
+- Kalau qty baris penjualan lebih dari qty yang diretur (misal terjual 2, retur 1), **tanya** dulu caranya.
 
 ### Pindah lokasi = SELALU 2 baris
 

@@ -31,4 +31,4 @@
   Cing Cing MERAH 2, 4, 8, 10; Yeon PINK 2; Laura SALEM 4, 6, 8, 10; Laura PINK 2, 8, 10.
   BARANG KELUAR baris 946–963, BARANG MASUK baris 1799–1816.
 - **2026-11-19**: Stok lama display booth bazaar (3 tahun lalu, baru dihitung sekarang) dicatat sebagai `DATA STOK` ke GUDANG, tanggal 25-Sep-2026, 18 baris (BARANG MASUK baris 1817–1834). Notes: "STOK LAMA DISPLAY BOOTH BAZAAR, DIHITUNG ULANG".
-  Meghan Gray = MEGHAN MILO. Ditahan: FAIRY WHITE (warna baru, belum ada di master ItemList dan belum ada baris di tab STOCK; perlu izin Sena untuk menambah).
+  Meghan Gray = MEGHAN MILO. FAIRY WHITE tidak dicatat (sudah kotor, tidak dijual; keputusan Sena 2026-11-19). Warna ini tidak ditambah ke ItemList/tab STOCK.

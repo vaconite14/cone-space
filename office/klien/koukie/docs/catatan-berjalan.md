@@ -26,3 +26,7 @@
   Ditahan (belum ditulis): AILEE BLUE size 6 (diminta 3, stok CM 2); SET MEI MEI BURGUNDY PITA size 6 (stok 0); SET MEI MEI COKLAT PITA size 2 (stok 0);
   DRESS MEI MEI LAVENDER (warna LAVENDER tidak ada di item ini); CING-CING RED (warna RED tidak ada; ada MERAH/FUSHIA);
   YEON PURPLE (tidak ada PURPLE; ada BLUE/PINK); LAURA SALEM PEACH dan LAURA BLUE PINK (warna tidak ada di item LAURA).
+- **2026-11-19**: Lanjutan transfer CM ke GUDANG (24-Sep-2026), 18 pasang, sesuai jawaban Sena: Ailee Blue 6 (2, sesuai stok CM);
+  Set Mei Mei Burgundy Pita 6 dan Coklat Pita 2 (1, walau stok CM 0 atau kurang; minus dibiarkan); Dress Mei Mei PINK 6, 8, 10;
+  Cing Cing MERAH 2, 4, 8, 10; Yeon PINK 2; Laura SALEM 4, 6, 8, 10; Laura PINK 2, 8, 10.
+  BARANG KELUAR baris 946–963, BARANG MASUK baris 1799–1816.

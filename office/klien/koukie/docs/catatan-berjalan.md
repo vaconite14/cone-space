@@ -38,3 +38,5 @@
   Ditahan (stok CM 0): Daisy Pink 4, Hyejin Pink 6, Meghan Red 2, Jasmine 6.
   Ditahan (warna tidak ada): Grace Top Pink (GRACE TOP punya Baby Pink, bukan Pink; belum dikonfirmasi).
   Warna dipetakan: Daisy Blue = Soft Blue, Summer Maroon = Summer Red, Angel Cream = Angel Nude, Set Mei Burgundy & Coklat = Pita, Dress Mei Mei Pink = Dress Mei Mei PINK.
+- **2026-11-19**: Lanjutan transfer CM ke GUDANG 25-Sep-2026, 5 baris (stok CM 0 tetap dipindah sesuai keputusan Sena): Daisy Pink 4, Hyejin Pink 6, Meghan Red 2, Jasmine 6 (BARANG KELUAR 1022–1026, BARANG MASUK 1893–1897).
+  Grace Top Pink = Grace Top Baby Pink size 4. Daisy Soft Pink 6 tetap 1 pcs (sesuai keputusan Sena).

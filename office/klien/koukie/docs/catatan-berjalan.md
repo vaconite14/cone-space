@@ -22,3 +22,7 @@
 - **2026-11-19**: Lanjutan transfer SMS ke GUDANG (23-Sep-2026), 15 pasang: Da Hae Terracotta 2 (1), Da Hae Fushia 2 (1), Da Hae Baby Pink 10 (2)
   dipindah sesuai hitungan ulang Sena walau stok di sheet kurang (stok SMS jadi minus; dibiarkan dulu). Light White 6 & 10, Sally Soft Pink 6 (2),
   Grace Top Sky Blue (sesuai daftar, bukan Blue). BARANG KELUAR baris 807–821, BARANG MASUK baris 1660–1674.
+- **2026-11-19**: Transfer CENTRAL MARKET ke GUDANG tanggal 24-Sep-2026, 124 pasang (248 baris): BARANG KELUAR baris 822–945, BARANG MASUK baris 1675–1798.
+  Ditahan (belum ditulis): AILEE BLUE size 6 (diminta 3, stok CM 2); SET MEI MEI BURGUNDY PITA size 6 (stok 0); SET MEI MEI COKLAT PITA size 2 (stok 0);
+  DRESS MEI MEI LAVENDER (warna LAVENDER tidak ada di item ini); CING-CING RED (warna RED tidak ada; ada MERAH/FUSHIA);
+  YEON PURPLE (tidak ada PURPLE; ada BLUE/PINK); LAURA SALEM PEACH dan LAURA BLUE PINK (warna tidak ada di item LAURA).

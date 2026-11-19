@@ -142,6 +142,9 @@ Balas singkat dengan format:
 | Tab | Baris terakhir berisi | Dicek tanggal |
 |---|---|---|
 | BARANG MASUK | 1897 | 2026-11-19 |
-| BARANG KELUAR | 1026 | 2026-11-19 |
+| BARANG KELUAR | 1029 | 2026-11-19 |
+
+### Penjualan
+Penjualan dicatat di 2 tempat: (1) STOCK KOUKIE, BARANG KELUAR, `TUJUAN` = `PENJUALAN`, `NOTES` = channel (mis. `BAZAAR TOKYO`); (2) LAPORAN PENJUALAN KOUKIE, tab DATA PENJUALAN BARU (baris baru di bawah data terakhir; kolom J–N pakai rumus; diskon 10% = harga jual x 10%, kalau tidak ada diskon kolom L dikosongkan). Ukuran harga: `SIZE KECIL` kecuali disebut `SIZE BESAR`.
 
 Sena juga bisa input manual langsung di sheet, jadi angka ini hanya titik awal pencarian: selalu verifikasi (Langkah 4).

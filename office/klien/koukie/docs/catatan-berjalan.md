@@ -40,3 +40,6 @@
   Warna dipetakan: Daisy Blue = Soft Blue, Summer Maroon = Summer Red, Angel Cream = Angel Nude, Set Mei Burgundy & Coklat = Pita, Dress Mei Mei Pink = Dress Mei Mei PINK.
 - **2026-11-19**: Lanjutan transfer CM ke GUDANG 25-Sep-2026, 5 baris (stok CM 0 tetap dipindah sesuai keputusan Sena): Daisy Pink 4, Hyejin Pink 6, Meghan Red 2, Jasmine 6 (BARANG KELUAR 1022–1026, BARANG MASUK 1893–1897).
   Grace Top Pink = Grace Top Baby Pink size 4. Daisy Soft Pink 6 tetap 1 pcs (sesuai keputusan Sena).
+- **2026-11-19**: Penjualan pertama lewat chat: 19-Nov-2026, bazaar Tokyo, size kecil. Kimberly Blue size 4 (diskon 10%, 135.000), Grace Top Fushia size 2 (diskon 10%, 215.100), Vest Shanghai Gold size 6 (tanpa diskon, 500.000). Total Kimberly + Grace Top 350.100.
+  Dicatat di DATA PENJUALAN BARU baris 317–319 dan BARANG KELUAR baris 1027–1029 (PENJUALAN, dari TOKYO).
+  Izin tulis sheet LAPORAN PENJUALAN KOUKIE (tab DATA PENJUALAN BARU) diberikan Sena hari ini, dicatat di CLAUDE.md.

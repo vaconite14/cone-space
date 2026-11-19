@@ -14,3 +14,8 @@
 - **2026-11-19**: Transfer GRACE TOP dari CENTRAL MARKET ke GUDANG tanggal 16-Sep-2026, 31 pasang (62 baris): SKY BLUE (tanpa M),
   FUSHIA (tanpa 2), BABY PINK (tanpa 2, 4), MINT (tanpa M). BARANG KELUAR baris 717–747, BARANG MASUK baris 1570–1600.
   Sena akan update stok per tanggal satu-satu; minus yang sudah ada di GUDANG (mis. BABY PINK size 4) diabaikan dulu atas permintaan Sena.
+- **2026-11-19**: Transfer SMS ke GUDANG tanggal 23-Sep-2026, 59 pasang (118 baris): BARANG KELUAR baris 748–806, BARANG MASUK baris 1601–1659.
+  Ditahan (belum ditulis, perlu konfirmasi Sena): DA HAE TERRACOTTA size 2 (stok SMS 0), DA HAE FUSHIA size 2 (stok SMS 0),
+  DA HAE BABY PINK size 10 (diminta 2, stok SMS 1), LIGHT DRESS WHITE (nama item LIGHT, warna WHITE?), SALLY (warna tidak disebut),
+  GRACE TOP BLUE (GRACE TOP tidak punya warna BLUE; SKY BLUE?).
+  Catatan: qty di daftar Sena adalah jumlah pcs per size (bukan jumlah baris). Sudah salah input sekali lalu diperbaiki di baris yang sama.

@@ -32,3 +32,9 @@
   BARANG KELUAR baris 946–963, BARANG MASUK baris 1799–1816.
 - **2026-11-19**: Stok lama display booth bazaar (3 tahun lalu, baru dihitung sekarang) dicatat sebagai `DATA STOK` ke GUDANG, tanggal 25-Sep-2026, 18 baris (BARANG MASUK baris 1817–1834). Notes: "STOK LAMA DISPLAY BOOTH BAZAAR, DIHITUNG ULANG".
   Meghan Gray = MEGHAN MILO. FAIRY WHITE tidak dicatat (sudah kotor, tidak dijual; keputusan Sena 2026-11-19). Warna ini tidak ditambah ke ItemList/tab STOCK.
+- **2026-11-19**: Transfer CENTRAL MARKET ke GUDANG tanggal 25-Sep-2026, 58 baris (BARANG KELUAR 964–1021, BARANG MASUK 1835–1892).
+  Aturan qty: angka di daftar Sena = size, qty = jumlah pcs (Kiyo Black 2 = 2 pcs: daftar 1 + daftar 2, kotak + display).
+  Daisy Soft Pink 6: diminta 2, stok CM 1, yang dipindah 1 (sisa 1 belum dipindah).
+  Ditahan (stok CM 0): Daisy Pink 4, Hyejin Pink 6, Meghan Red 2, Jasmine 6.
+  Ditahan (warna tidak ada): Grace Top Pink (GRACE TOP punya Baby Pink, bukan Pink; belum dikonfirmasi).
+  Warna dipetakan: Daisy Blue = Soft Blue, Summer Maroon = Summer Red, Angel Cream = Angel Nude, Set Mei Burgundy & Coklat = Pita, Dress Mei Mei Pink = Dress Mei Mei PINK.

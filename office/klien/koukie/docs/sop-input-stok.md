@@ -141,7 +141,7 @@ Balas singkat dengan format:
 
 | Tab | Baris terakhir berisi | Dicek tanggal |
 |---|---|---|
-| BARANG MASUK | 1541 | 2026-11-18 |
-| BARANG KELUAR | 688 | 2026-11-18 |
+| BARANG MASUK | 1569 | 2026-11-19 |
+| BARANG KELUAR | 716 | 2026-11-19 |
 
 Sena juga bisa input manual langsung di sheet, jadi angka ini hanya titik awal pencarian: selalu verifikasi (Langkah 4).

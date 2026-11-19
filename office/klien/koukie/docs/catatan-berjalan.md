@@ -11,3 +11,6 @@
 - **2026-11-19**: Transfer JISOO BLUE/PINK/BUTTER dari CENTRAL MARKET ke GUDANG tanggal 16-Sep-2026 (permintaan Sena, bazaar CM tutup).
   28 pasang (56 baris): BARANG KELUAR baris 689–716 (PINDAH GUDANG, KE GUDANG), BARANG MASUK baris 1542–1569 (DATA STOK, DARI CENTRAL MARKET).
   Sudah dicek: stok CM cukup, stok CM sekarang 0 untuk semua size yang dipindah (kecuali JISOO PINK & BUTTER size 6 tidak ikut, sisa 1).
+- **2026-11-19**: Transfer GRACE TOP dari CENTRAL MARKET ke GUDANG tanggal 16-Sep-2026, 31 pasang (62 baris): SKY BLUE (tanpa M),
+  FUSHIA (tanpa 2), BABY PINK (tanpa 2, 4), MINT (tanpa M). BARANG KELUAR baris 717–747, BARANG MASUK baris 1570–1600.
+  Sena akan update stok per tanggal satu-satu; minus yang sudah ada di GUDANG (mis. BABY PINK size 4) diabaikan dulu atas permintaan Sena.

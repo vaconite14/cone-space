@@ -19,3 +19,6 @@
   DA HAE BABY PINK size 10 (diminta 2, stok SMS 1), LIGHT DRESS WHITE (nama item LIGHT, warna WHITE?), SALLY (warna tidak disebut),
   GRACE TOP BLUE (GRACE TOP tidak punya warna BLUE; SKY BLUE?).
   Catatan: qty di daftar Sena adalah jumlah pcs per size (bukan jumlah baris). Sudah salah input sekali lalu diperbaiki di baris yang sama.
+- **2026-11-19**: Lanjutan transfer SMS ke GUDANG (23-Sep-2026), 15 pasang: Da Hae Terracotta 2 (1), Da Hae Fushia 2 (1), Da Hae Baby Pink 10 (2)
+  dipindah sesuai hitungan ulang Sena walau stok di sheet kurang (stok SMS jadi minus; dibiarkan dulu). Light White 6 & 10, Sally Soft Pink 6 (2),
+  Grace Top Sky Blue (sesuai daftar, bukan Blue). BARANG KELUAR baris 807–821, BARANG MASUK baris 1660–1674.
